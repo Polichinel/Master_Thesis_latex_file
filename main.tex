@@ -345,6 +345,8 @@ In regards to the spatial dimension, the criteria are rather similar. We need a 
 
 In the next section I will present a tool capable of fulfilling all these criteria - and more. The machine Learning technique of Gaussian processes. The goal is to demonstrate the nuts and blots of the tool before I move on the actual implementation. The section below will also briefly introduce a number of other computational tools used to bind the whole effort together.\par
 
+% why slope, acc and mass?
+
 \section{The Appropriate Tools}\label{tools}
 
 % what going down here mate?
@@ -767,14 +769,22 @@ Having presented the context of my project, the tools I employ and the data used
 
 %In the next section I will estimate and extraplote the patterns of conflict magnitude and conflcit exposure 
 
-\section{The Implementation}% Better name?
+\section{Compiling the framework}% Better name?
 
-\todo[inline]{Why the two baseline conflict exposure and conflict magnitude}
-\todo[inline]{Why the there derived measures: slope, accelaration and mass?}
+% What is gonna happen here?
+The challenge now is to estimate the temporal and spatial patterns of conflict in each grid cell at all years in included in the train set. These patterns will then be extracted into future years corresponding to those of the test set. From these elongated times lines I will then derive the corresponding slope and acceleration pertaining to each year along with the total conflict mass inhabiting each time line. This yields eight features which will then be combined in my final predictive framework to estimate the probabilities of conflict in each individual grid cell given the test years from 2013 through 2017. Lastly I evaluate how well my predictions fit with the actual conflicts present throughout the test years.\par
 
-%The implementation is divided into four steps.
+%The implementation is divided into two steps.
+As such the following section is divided into two subsections. The first one focuses on using Gaussian processes to capture the patterns of conflict and extrapolate these into future years. The second subsection focuses on using the eight features in the final predictive framework based on xgboost and undersampling. Together these two subsections constitutes the two layers of my predictive framework.\par
+
+% Afterwards
+In the proceeding section I will then present the results and evaluate the performance of my approach. That is; assessing whether or not I have actually identified and extracted conflict patterns which can be used to predict the time and place of future conflicts. 
+%\todo[inline]{Why the two baseline conflict exposure and conflict magnitude}
+%\todo[inline]{Why the there derived measures: slope, accelaration and mass?}
 
 \subsection{Conflict exposure and magnitude}
+
+%[HERTIL ER DU KOMMET!!!]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 First, I estimate the shared hyper-parameters for a 2d Gaussian Processes pertaining to the individual spatial patterns for each year. I use logged conflict fatalities $CF$ as my target $y$. I use longitude and latitude as the features $X$ with the sub-indexing $ll$. This Gives me a measure of "static" conflict exposure $\emph{sce}$ - meaning I do not take time into account yet.\par
 
