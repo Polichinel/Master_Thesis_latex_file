@@ -758,7 +758,7 @@ The log-transformation is warranted since the data is highly skewed; most cells 
 % what will be test and what will be train?
 Giving that I am producing forecasting I use the last five years of my data, 2013 through 2017 as test set, and all other years - from 1989 through 2012 - as my train set.  As such, I use a ratio of roughly 20\% for the test set, which is rather conventional \citep{Friedman_2001, Ward_Greenhill_Bakke_2010}.\par
 
-% MEN ER DET HER DET SKAL STÅ? +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% MEN SKAL DET HER ST HERÅ? +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 % Illustratively, in \cite{Maase} I used the PRIO grid database to obtain the structural features at a disaggregated sub-national level \citep{Tollefsen_2012}. This database holds a plethora of interesting features at disaggregated sub-national level, most with some relevance in regards to conflict prediction.. The database is indeed impressive, yet the challenge of using this data - and indeed most data like it - for forecasting, is that it takes researchers a lot of time to collected, process and make accessible. Both for the researches at PRIO and the researches responsible at each original source. At the time of writing - 2019 - the most up-to-date features have the last entry at 2015, while some have last entry at 2010; a five to ten year lag if I want to predict the conflict zones of 2020. This is less than optimal to say the least. Even if one where to bypass the Prio Grid database and go directly to the different original sources of data, much would still be lagging, and it would be a huge burden to collect, clean and merge these various data sources.\par
 
 % Conversely, for data relating to the spatial/temporal pattern of conflict we only need one data source; on pertaining to when and where conflict has taken place in the past, e.g. the UCDP. At the time of writing the last entry in the UCDP is from 2017, and the given past history the entry for 2018 is due sometime doing the first half of 2019. A clear advantage compared the the PRIO gird database. As such, I might not be able to use data from 2019 to predict events in 2020, but I would be able to use data from 2018 to predict events in 2020 and onwards; a manageable two year lag.\par
@@ -772,10 +772,10 @@ Having presented the context of my project, the tools I employ and the data used
 \section{Compiling the framework}% Better name?
 
 % What is gonna happen here?
-The challenge now is to estimate the temporal and spatial patterns of conflict in each grid cell at all years in included in the train set. These patterns will then be extracted into future years corresponding to those of the test set. From these elongated times lines I will then derive the corresponding slope and acceleration pertaining to each year along with the total conflict mass inhabiting each time line. This yields eight features which will then be combined in my final predictive framework to estimate the probabilities of conflict in each individual grid cell given the test years from 2013 through 2017. Lastly I evaluate how well my predictions fit with the actual conflicts present throughout the test years.\par
+The following section is divided into two subsections. First I will estimate the temporal and spatial patterns of conflict in each grid cell at all years in included in the train set using Gaussian processes. These patterns will then be extrapolated into future years corresponding to those of the test set. From these elongated times lines I will then derive the corresponding slope and acceleration pertaining to each year, along with the total conflict mass inhabiting each time line. This yields eight features. Secondly, using xgboost and undersampling, these eight features will be combined in my final predictive framework to estimate the probabilities of conflict in each individual grid cell given the test years from 2013 through 2017.\par 
 
-%The implementation is divided into two steps.
-As such the following section is divided into two subsections. The first one focuses on using Gaussian processes to capture the patterns of conflict and extrapolate these into future years. The second subsection focuses on using the eight features in the final predictive framework based on xgboost and undersampling. Together these two subsections constitutes the two layers of my predictive framework.\par
+% Math will be in the appendix
+% or? 
 
 % Afterwards
 In the proceeding section I will then present the results and evaluate the performance of my approach. That is; assessing whether or not I have actually identified and extracted conflict patterns which can be used to predict the time and place of future conflicts. 
@@ -783,9 +783,66 @@ In the proceeding section I will then present the results and evaluate the perfo
 %\todo[inline]{Why the there derived measures: slope, accelaration and mass?}
 
 \subsection{Conflict exposure and magnitude}
-
 %[HERTIL ER DU KOMMET!!!]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+%First I will estimate the temporal and spatial patterns of conflict in each grid cell at all years in included in the train set using Gaussian processes. These patterns will then be extrapolated into future years corresponding to those of the test set. From these elongated times lines I will then derive the corresponding slope and acceleration pertaining to each year, along with the total conflict mass inhabiting each time line.
+
+% Whats gonna happend here mate
+In my final predictive framework I use eight features; all pertaining directly to the temporal and spatial patterns of conflict. These eight features will all be derived from two functions estimated for each grid cells time line using the train set and Gaussian processes. Four features from each function. The two functions will respectively be an estimate of the pattern of conflict magnitude and the pattern of conflict exposure given the (training) time line of each grid cell. Given each cell, I will extrapolate these two functions into the future years, contained in the test set. The value of each of the two function at any given year constitutes a feature; so does the slope of the function that year, the accelaration of the function that year and the total mass under the function given all years. This constitutes the eight features used in the final predictive framework. It is the construction of these eight features, which is my objective in this section.\par
+
+% IN what order:
+I will start by estimating and extrapolating the function pertaining to conflict magnitude. Then I will move on to estimating and extrapolating the function pertaining to conflict exposure. Finally I will derive the slope. accelaration and mass corresponding to each function.\par
+
+% The two functions requires the measures to be estimated against.
+To estimate the function pertaining to conflict magnitude I simply use conflict fatalities logged as my target ($y_{cm}$) and the years in my train set as the sole feature ($x_{year}$). The mean function is simply $0$ and the covariance function is the squared exponential function. The relevant priors can be found in the appendix.\par
+
+\[
+\tilde{y}_{cm} = f_{cm}(x_{year}) + \epsilon_{cm} \tag{19} \label{eq:form_cm}
+\]
+
+\[
+f_{cm}(x_{year}) \sim \mathcal{GP}_{cm}(m_{cm}(X_{year}),k_{cm}(x_{year},x_{year}')) \tag{20} \label{eq:func_cm}
+\]
+
+\[
+m_{cm}(x_{year}) = 0 \tag{21} \label{eq:m_cm}
+\]
+
+\[
+k_{cm}(x_{year},x_{year}') = \eta_{cm}^2 exp\left(-\frac{|x_{year}-x_{year}'|^2}{2\ell_{cm}^2}\right) \tag{22} \label{eq:k_cm}
+\]
+
+% hyper parameters 
+First I estimate the hyper parameters...
+
+% hp table
+
+% Int. the estimated hps
+
+% Drawing samples.
+I introduce $x_{new}$, with is just a vector of alls years. Train and test alike. Using the estimated hyperparemeters and the data contained in the train set I now draw GPS for each time line acorss all years included in $x_new$. A sample of estimated function can be seen in [FIG].
+
+[FIG]
+
+% int fig.
+
+
+
+%These step will be implimentd below..
+
+
+
+
+
+
+
+
+
+
+
+
+
+% OLD....
 First, I estimate the shared hyper-parameters for a 2d Gaussian Processes pertaining to the individual spatial patterns for each year. I use logged conflict fatalities $CF$ as my target $y$. I use longitude and latitude as the features $X$ with the sub-indexing $ll$. This Gives me a measure of "static" conflict exposure $\emph{sce}$ - meaning I do not take time into account yet.\par
 
 The priors for $\epsilon_{sce}$, $\eta_{sce}$, $\ell_{sce}$ are all weakly informative priors merely in place to encourage computational efficiency.\par
@@ -799,7 +856,7 @@ f_{sce}(X) \sim \mathcal{GP}_{sce}(m_{sce}(X_{ll}),k_{sce}(X_{ll},X_{ll}')) % \t
 \]
 
 \[
-\epsilon_{sce} \sim 
+\epsilon_{sce} \sim \text{HalfCaushy}(3)
 \]
 
 With the mean function being the constant of zero and the covariance function being the squared exponential kernel function:
@@ -813,10 +870,10 @@ k_{sce}(X_{ll},X_{ll}') = \eta_{sce}^2 exp\left(-\frac{|X_{ll}-X_{ll}'|^2}{2\ell
 \]
 
 \[
-\eta_{sce} \sim
+\eta_{sce} \sim \text{HalfCauchy}(1)
 \]
 \[
-\ell_{sce} \sim
+\ell_{sce} \sim \text{Gamma}(4,2)
 \]
 
 
