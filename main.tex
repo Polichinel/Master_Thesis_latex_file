@@ -887,8 +887,9 @@ Starting with the hyperparametset, the most interesting one in \autoref{cm_hp} i
     \caption{\footnotesize{The estimated temporal patterns of conflict magnitude from fifteen randomly drawn time lines. For visualization purposes all fifteen samples has minimum one event over the course of the train years. The solid line is the maximum likelihood point estimate of $\mu_{cm}$ and the corrosponding shading denotes $2\times\sigma_{cm}$. At such, given them mocel there is a 95\% that $\mu_{cm}$ is within this zone. The scatter points are the actual observed values from the test set. $\ell_{cm}$ = 3.6, $\eta_{cm}$ = 1.1, $\epsilon_{cm}$ = 0.9}\label{cm_sampel_eks}}
 \end{figure}
 
-% Int. the samples
+% Int. the samples  -> critaria for good temporal patterns.
 Turning to the estimated functions, I have extrapolated these beyond the train years into the test year simply by introduce $x_{yearNew}$. Using the estimated hyperparemeters and the data contained in the train set I now generate Gaussian processes for each time line across all years included in $x_{yearNew}$. This is what i illustrate in \autoref{cm_sampel_eks}. Here the estimated functions continues beyond the train years (1989-2012) into the test years (2013-2017) guided by past (training) data, the covariance ($k_{cm}$) function, the mean function ($m_{cm}$) together with the estimated error term and hyperparameters ($\epsilon_{cm}$, $\ell_{cm}$ and $\eta_{cm}$). As such, what I illustrate with the small sample in \autoref{cm_sampel_eks} is, that each of the functions estimated represents the temporal pattern of conflict magnitude pertaining to the time line of one specific grid cell. That is; how conflict have waxed and waned in each geographical cell over the course of the train years, and how this pattern can be expected to continue into the test years given data and model specification employed.\par
+% Skriv noget om hvor godt det passer på teori...
 
 % What it does not capture: two steps ot ammend
 What these functions does not capture however, is the spatial dimension of conflict. Just as conflict can move through time, it can also move through space. I need a measure capturing, not just the specific patterns pertaining to a specific cell, but also a measure capturing how exposed a said cell is to the conflict patterns of proximate cells. To create such measure I need to make two estimations. First I estimate a 2D Gaussian process for each year in the train set using longitude and latitude as features ($x_{lat}$, $x_{long}$: $X_{ll}$) and conflict magnitude  ($y_{cm}$) as target. This I call static conflict exposure ($sce$). This measure simply tells us how exposed a given cell is to conflict one given year without taking into account any temporal patterns. Secondly I also want this measure to capture the spatial patterns across time and to be able to extrapolate values into the furture. To achieve this I simply estimate a 1d Gaussian process as already done once. This time I again use year as the sole feature ($x_{year}$), but instead of conflict magnitude I use $sce$ as target. This give my a measure over all year for conflict exposure. This measure I call dynamic conflict exposure; $\tilde{y}_{dce}$. Instead of only taking into account the past pattern of the individual cell, this measure take into account the past patterns of all cells in the relevant vicinity.\par 
@@ -928,9 +929,9 @@ As before, I first estimate the hyper parameters and error term $\eta_{sce}$, $\
 	\hline
                             &  \thead{Point estimate\\(mean)}   & \thead{Standard\\deviation}   & \thead{95\% Credibility\\interval} \\
 	\hline
-	$\ell_{sce}$             & \thead{x}        & \thead{x} 	& \thead{x - x}                             \\
-    $\eta_{sce}$             & \thead{x}        & \thead{x} 	& \thead{x - x}                             \\
-    $\epsilon_{sce}$         & \thead{x}        & \thead{x} 	& \thead{x - x}                             \\
+	$\ell_{sce}$             & \thead{1.33}        & \thead{0.02} 	    & \thead{1.26 - 1.39}                             \\
+    $\eta_{sce}$             & \thead{0.20}        & \thead{$<$0.01} 	& \thead{0.19 - 0.20}                             \\
+    $\epsilon_{sce}$         & \thead{0.48}        & \thead{$<$0.01} 	& \thead{0.47 - 0.48}                             \\
   
     \hline
 	\end{tabular}
@@ -938,24 +939,72 @@ As before, I first estimate the hyper parameters and error term $\eta_{sce}$, $\
 \caption{\footnotesize{...}}\label{sce_hp}
 \end{table}
 
+% Int. the estimated hps
+Looking at the hyper parameters, the most informative is once again the lenghtscale $\ell_{sce}$. There is a 95\% probability that $\ell_{sce}$ is between 1.2 and 1.4 with my point estimate being 1.3. In substantial terms this tells us that conflict magnitude is relatively stable within a radius of roughly 130 kilometers. To illustrate the actual spatial patterns estimated I have plotted the obtained $sce$ values pertaining to 2012 in \autoref{sce_sampel_eks}.\par
+
+% SOmething about eta and epsilon - eta is smaller then epsilon.. That is somthing to comment on. A lot of things cell specific stuf is not captured here.  But we also wants general patterns
+
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{sce_2012_samples.pdf}
-    \caption{\footnotesize{}}
+    \caption{\footnotesize{}}\label{sce_sampel_eks}
+\end{figure}
+
+%Int the plot. -> critaria for good spatial patterns.
+What I illustrate in \autoref{sce_sampel_eks} is simply a estimated 2d function over the conflict magnitude of all cells in 2012. We see that the spatial patterns estimated conforms neatly to the theoretical expectation regarding spatial conflict patterns. Diffusion is fundamental bell-shaped, and radiates out from specific centers. Futher more, looking at examples such as Nigeria, Somalia and especially Afghanistan we also see how patterns such as circulation produces different results compared to tangency.\par  
+
+% Moving on to dce.
+Next step is to create estimate the $dce$. I simply repeat the steps taking to estimate $f_{cm}$. Now, instead of using $cm$ as target I use the estimated values from $f_{sce}(X_{ll})$ as my target, which I denote $\tilde{y}_{dce}$. Beyond that small change the procedure is identical. The mathematical specifications is presented in equation \ref{eq:form_dce} to \ref{eq:k_dce}.\par 
+
+
+\[
+\tilde{y}_{dce} = f_{dce}(x_{year}) + \epsilon_{dce} \tag{27} \label{eq:form_dce}
+\]
+
+\[
+f_{dce}(x_{year}) \sim \mathcal{GP}_{dce}(m_{dce}(x_{year}),k_{dce}(x_{year},x_{year}')) \tag{28} \label{eq:func_dce}
+\]
+
+\[
+m_{dce}(x_{year}) = 0 \tag{21} \label{eq:m_dce}
+\]
+
+\[
+k_{dce}(x_{year},x_{year}') = \eta_{dce}^2 exp\left(-\frac{|x_{year}-x_{year}'|^2}{2\ell_{dce}^2}\right) \tag{29} \label{eq:k_dce}
+\]
+
+
+% HP table
+\begin{table}[!htb]
+\begin{center}
+\centering
+% 	\begin{tabular}{l*{4}{c}}
+	\begin{tabular}{m{3cm} m{3cm} m{3cm} m{3cm}}
+	%\hline
+	\textbf{Hyperparameters}\\
+	\text{Dynamic conflict exposure}\\
+	\hline
+                            &  \thead{Point estimate\\(mean)}   & \thead{Standard\\deviation}   & \thead{95\% Credibility\\interval} \\
+	\hline
+	$\ell_{dce}$             & \thead{3.23}        & \thead{0.13} 	& \thead{2.99 - 3.50}                             \\
+    $\eta_{dce}$             & \thead{0.59}        & \thead{0.01} 	& \thead{0.55 - 0.62}                             \\
+    $\epsilon_{dce}$         & \thead{0.23}        & \thead{0.01} 	& \thead{0.22 - 0.23}                             \\
+  
+    \hline
+	\end{tabular}
+\end{center}
+\caption{\footnotesize{...}}\label{dce_hp}
+\end{table}
+
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.47]{dce_15_samples.pdf}
+    \caption{\footnotesize{}}\label{dce_sampel_eks}
 \end{figure}
 
 
-
-
-
-
-
-
-
-
-
-
-% DCE
+% DCE--------------------------------------------------------
 [OLD]
 % int fig.
 
