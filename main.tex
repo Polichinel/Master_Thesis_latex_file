@@ -1060,7 +1060,7 @@ In this short subsection I will briefly describe how I use the eight constructed
 % what goes ind
 To create the models here used I use my train set of features $X_{patterns}$ and a binary conflict indicator $y_{binary}$ as target. $X_{patterns}$ contains the values of all eight features from 1989 through 2012 while $y_{binary}$ is a binary indicator denoting whether or not a given cell experienced any conflict some given year between 1989 and 2012. The test data which holds the corresponding $X_{patterns}$ and $y_{binary}$ values from 2013 through 2017 a kept isolated from the model construction effort.\par
 
-% Ehat happens with what goes ind
+% what happens with what goes ind
 For each year in my test set (2013-2017) I create 1000 xgboost models using the training data. Every model uses the complete set of events form the training data along with an equally sized set of randomly drawn non-events, also from the training data. Every time a single model is finished training I ask that model to generate out-of-sample predictions ($\tilde{y}_{pred}$) using the features ($X_{patternsTest}$) contained in the test set. importantly the models here never actual see the target values ($y_{binaryTest}$) from the test set.\par
 %[can be programmed better]
 
@@ -1070,15 +1070,53 @@ The genereated predictions are expressed as probabilities. Specifically probabil
 % Bridge
 To evaluate to what extent my framework, and such my features, have successfully capture the patterns of conflict, these probabilities can now be compared to the actual observations contained in the test set $y_{binaryTest}$. The results will be presented and scrutinized in the next section.\par
 
-
-
-
-
-
-
 \section{The Results}
 % [Analysis]
 % I virkeligheden mest bare resultaterne; start bare hård med et resultat.
+
+% Whats gonna happen here.
+In the following section I will evaluate the predictive performance of my framework. The point is to asses whether I produce features relating to the temporal and geo-spatial patterns of conflicts which can be used to predict the time and place of furture intra state conflict. To best convey the potential of my framework I will evaluate it from a number of angles, stating with the PR-curve, the AP score and the ROC-AUC score. Then I will choose a threshold which will be used to convert my predicted probabilities to binary predictions. From these binary predictions a derive the rates of true positives, false positives, true negatives and false negatives along the the related measures precision and recall. Finally I evaluate the relative importance for the eight features use in the final predictive effort.\par
+
+% AP over time
+The AP score is the prime metrics of interest. In \autoref{} I show the out-of-sample AP score for each of the test years used. As expected the perfomance of my framwork drops the further I move into the furture. Specifically, and as predicted by the lenghtscales $\ell_{cm}$ and $\ell_{dce}$, the performance drops after 3 years.\par
+
+[FIG]\par
+
+%selected years
+Given these results, and to keep the evaluation effort concise, I will not spend more ink evaluating the two last test years 2016 and 2017. Furthermore, to mirror the limits of real world applications I also ignore the first test year 2013. After all, the data used to train the models would not have been available before June 2013, and thus predictions regarding conflicts in 2013 would be of limited use. As such I focus on the years 2014 and 2015, respectively 6 and 18 months into the furture from when the data would first have been obtained.\par % or is it fine? gives you half a year of predictions??? But politics takes time...
+
+% PR-curve and ap score ( ROC and AUC..) for 
+The PR-curve, the AP score and the (ROC) AUC score for the years 2014 and 2015 are presented in \autoref{}.\par 
+
+[FIG]
+
+% compare with last assignment 
+Intriguingly, these results are better then those produced in \cite{Maase}. This is interesting for a number of reasons. First of all this reaffirms the conclusion from \cite{Maase} regarding the patterns are more informative than structural features when it comes to predicting furture conflicts. Secondly, the framework presented in \cite{Maase} also included features pertaining to the temporal and spatial patterns of conflicts. These features, however, where vastly less theoretically and methodologically developed compared to the eight features I use here. Point being, using only the past patterns of conflict, in a theoretically and methodologically coherent manner, can yield better predictions, then using a broad roster of more traditional structural variables in cohort with poorly operationalized patterns. Only furture research will show if the predictions I present here can be furture improved be reintroducing structural patterns.\par
+
+%compared to general stat of the art.
+Beyound the results presented in \cite{Maase}, direct comparison is less forward. My framework produces and AUC of XXX with a 95\% propapility of being between XXX and XXX. The stat of the art prediction efforts in academia achieves and AOC for approximately XXX \citep[XX]{chadefaux2017conflict}. Importantly however, most of these of these studies deal with country level conflicts and only included novel onsets\citep[XXX]{chadefaux2017conflict}. This naturally makes any direct comparisons somewhat misleading. One disaggregated studies which could be compared to my framework is provided by \cite{perry_2013}. Here and AUC of XXX is achieved using political sub unites such as XXXX as unit of analysis [onsets???]. While disaggregated however, most of the unit of analysis of this studio is much larger then those I employ here. As such, while direct comparison is unfeasible, it is clear that the results I here produces are no worse, and possible better, then similar efforts across field. Importantly such efforts often relies on structural data, which in a piratical situation would but them at an disadvantage compared to the framework I present, simply due to their reliance on dated data.\par
+
+% Compare to using just the last opserved value
+
+% why I now set a threshold
+Unfortunately measures such as AP or AUC tells us little of substance regarding the frameworks predictive capabilities. To better convey the actual real world potential of the framework I formulated a threshold denoting. A lot of use full information is discarded this way, but it does serve to present the results in a more intuitive matter. For real world applications, however, the actual probabilities should naturrally always be consulted.\par
+
+% The threshold is set at 10-15\%.
+Any threshold is bound to be more or less arbitrary. I simply chooses to set a threshold, which insures that I predict roughly the same total number of conflicts as was observed in the last year of the training set (2012). Setting the threshold at 15\% fur fills this. this means that every cell which have a probability of conflict above 15\% is classified as conflicts, and all other cells as non conflicts. Having actual classifications allow us to asses the genereated number of true positives, false positives, true negatives and false negatives. Given the threshold employd I have plotted these rates in \autoref{}.\par
+% Should it not be some mean of the last five years. Could run a GP and extrapolate to get an estimate of the number ;) 
+
+[FIG]
+
+
+% interpret the fig
+
+
+% What is then the precision and recall - and what does this mean..
+
+% Lastly feaute importance....
+
+
+% Bridge
 
 
 \section{The Conclusion}
