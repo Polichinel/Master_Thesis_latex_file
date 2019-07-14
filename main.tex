@@ -1176,10 +1176,49 @@ As presented, using the patterns of past conflicts as a predictor only constitut
 
 
 \section{Futher Perspectives}
-
 % For estimaion: if you want arguement regarding baseline model look at \cite{schutte2011diffusion}.
 % For prediction see own PHD app.
 % Selvkritik - også vedrørende de mål du bruger måkse....
+
+% Weakness of you approach/GP's
+Using past efforts as predictors does result in some natural limitations. We will never be able to predict truly novel conflicts removed in time and space from any previous conflicts using such approach alone. We might be able to achieve even better results with Gaussian processes then what I have presented above. This might be done be distinguishing between long term trends and short term trends or by using hierarchical hyper priors. Furthermore other even more involved methods such as artificial neural networks might be able to capture the patterns of conflict in even more effective ways. But while these opportunities should be explored in future researche, they will never ammend the fundamental limitation of using past patterns to predict future patterns. As such, while patterns should be a central component in any early warning system, they should also only be one of many.\par
+
+% Perhaps somthing about other events: political unrest, riots ect..
+%One solutions could be to bring in other event data, such as data on demonstrations, riots, civil unrest ect. but that wich is avialeel is data... MORE
+
+% one solution: reintroduce structural patterns and ammend thier weakneess with GP's
+An other component should focus on structural data and theory on the structural prerequisites of intra-state conflict, such as poverty, resources, regime ect. The advantages of such a component is the large catalog of theory following it \citep{Collier_Hoeffler_1998, Fearon_Laitin_2003, Collier_Hoeffler_2004, Hegre_Sambanis_2006, Kalyvas_2007, Goldstone_2010, Cederman_Gleditsch_Buhaug_2013, perry_2013}. Such insights inform feature engineering, feature selection and model selection \cite[30]{Cederman_Gleditsch_Buhaug_2013}.\par
+
+% disadvantage 1 and solution
+However, as noted one disadvantage of this approach is dated data while an other disadvantage is high inertia \citep[10]{chadefaux2017conflict}. Structural features are slow to change while political unrest can evolve into actual intra-state conflict relatively fast. Intriguingly however, given the this inertia we can address the disadvantage of dated data simply by use Gaussian processes to extrapolate the structural patterns into future years. As such, I would exploit the inertia of structural patterns to ameliorate the dated state of the data. To a large extent this effort would mimic the approach presented in this thesis, simply using different data.\par
+
+% disadvantage 2 and solution
+Yet, while the inertia inherent in structural data might justify extrapolating these patterns across five or even ten years, the inertia still means that we might identify fragile regions but not necessarily which of these fragile regions will experience conflict \citep[10]{chadefaux2017conflict}. Combining a structural component with on of patterns will reduces this problem especially if we included other forms of events then actual conflict fatalities.\par 
+
+% Or use test or image recognition..
+Following this logic, an other component should be one which uses text or image data obtained from news/social/political sources. Such data would effectively constitute it own kind of event data, but one specificly tailored for the task at hand. Using text data is still a novel approach in social science \citep{grimmer2013text} and image date even more so [REF fra det papir lene gav dig]. Yet, the use of text data has already shown promise in conflict predictions \citep{chadefaux_2014, mueller_2016}. Using image data to conflict prediction has to my knowledge not been done yet, but it could hold great promise not least since it circumvents the problem of varying languages which challenges text data. \par
+
+%advantage - er du sikker på det er sin egen paregraf..
+Text and image data has two advantages on structural data. Firstly, the data has the potential to be very current. In theory, it could be updated in real-time \citep[474]{cederman2017predicting}. Secondly, like other kinds of event data, text and image data would be able to sort fragile but peaceful regions from fragile regions on the verge of conflict. Importantly, such data would also holds an advantage over the event data such as that used in this thesis; it could help predicting onsets far removed in time and space from any previous conflicts.\par
+
+% Weaknesses
+Naturally, using text or images has its weaknesses. Gathering text or images from the entire globe is no trivial effort. Local sources is hard to come by, and legal barriers might prevent the use of any data obtained. As such, it is not realistic to produce data on a disaggregated level comparable with that of the other components I have suggested. As such, to ameliorate the individual weaknesses of each component they most all be combined into a single unified predictive framework. A unified early warning system for conflict prediction.\par
+
+% bridge out ->
+With these paths for future research presented I concluded this thesis on an optimistic note. Reliable conflict prediction might be the conflict research's final frontier, but given the result presented above, it does by no means appear a fruitless nor impossible endeavour.\par
+
+% --------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 % OLD +++++++++++++++++++++++++++++++++++++++++++++++++++++++
