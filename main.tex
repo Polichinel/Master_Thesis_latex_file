@@ -46,8 +46,8 @@
 
 \title{Where Men Rebel\\A Modern Approach to Conflict Forecasting}
 
-\author{Simon Polichinel von der Maase}
-\date{January 2019}
+\author{Simon Polichinel von der Maase\\\emph{Under Frederik George Hjort}}
+\date{July 2019}
 
 \begin{document}
 
@@ -65,7 +65,7 @@
 \pagebreak
 
 \begin{abstract}
-\todo[inline]{to come}
+\todo[inline]{to come. Max one page}
 
 \end{abstract}
 \pagebreak
@@ -682,7 +682,7 @@ AP = \sum_n (R_n-R_{n-1})P_n \tag{17} \label{eq:ap}
 \]
 
 % compared to AUC?
-The AP score has a number of similarities with AUC and can be thought of as the area under the PR curve  \citep[349-350]{su2015relationship}. The key difference is that AP places more emphasis on identifying high probability events than identifying low probability events \citep[350]{su2015relationship}. The interpretation also differs from AUC. An AUC score of 0.5 denotes a classifier which is no better than random. This is not the case with AP where 0.5 can be a decent score depending on the context \citep[350-351]{su2015relationship}. Specifically, the "random" baseline of AP is equal the share of events. If the data is precisely balanced the baseline for the AP score is 0.5 just like the AUC score. If the data is imbalanced, say 5\% events versus 95\% non-events, the baseline for the AP score will be 0.05. As such, AP is a good summarizing measure for judging and comparing the predictive performance of models on imbalanced data without setting a hard threshold. I will use both measures to compare my results with the results presented in \cite{Maase} and to show how the predictive power of my framework changes as I move further into the future.\par
+The AP score has a number of similarities with AUC and can be thought of as the area under the PR curve  \citep[349-350]{su2015relationship}. The key difference is that AP places more emphasis on identifying high probability events than identifying low probability events \citep[350]{su2015relationship}. The interpretation also differs from AUC. An AUC score of 0.5 denotes a classifier which is no better than random. This is not the case with AP where 0.5 can be a decent score depending on the context \citep[350-351]{su2015relationship}. Specifically, an approximation of the "random" baseline of AP is given the share of events \citep[132]{bestgen2015AP}. If the data is precisely balanced the baseline for the AP score is 0.5 just like the AUC score. If the data is imbalanced, say 5\% events versus 95\% non-events, the baseline for the AP score will be 0.05. As such, AP is a good summarizing measure for judging and comparing the predictive performance of models on imbalanced data without setting a hard threshold. I will use both measures to compare my results with the results presented in \cite{Maase} and to show how the predictive power of my framework changes as I move further into the future.\par
 
 % The downside and the solution
 The downside of AP is that it is not particularly interpretable on a substantive level. As such, to best present the potential of my framework in substantial terms I will use the AP score in tandem with recall and precision at various thresholds. In the same manner I will also use the components $TP$, $FP$, $FN$ and $TN$ for visualizations. This will naturally demand that I set some hard threshold. I use a threshold which generates a number of predicted events which roughly matches the number of actual events in the last observed year: 2012. This threshold is as arbitrary as any other hard threshold chosen, but it serves well to create interpretable visualizations. Together these measures will ensure both honest evaluation and interpretability of my framework.\par % you could also map with different thresholds....
@@ -785,17 +785,17 @@ The following section is divided into two subsections corresponding to the two l
 	\hline
 	\\
 	\thead{\\}                  &$y_{cm}$                                & $x_{year}$                           && $\tilde{y}_{cm} = f_{cm}(x_{year}) + \epsilon_{cm}$        \\
-    \thead{First\\layer}        &$y_{cm}$                                & $x_{long}$, $x_{lat}$: $X_{ll}$       && $\tilde{y}_{sce} = f_{sce}(X_{ll}) + \epsilon_{sce}$           \\
+    \thead{First\\layer}        &$y_{cm}$                                & $X_{ll} =$ $x_{long}$, $x_{lat}$       && $\tilde{y}_{sce} = f_{sce}(X_{ll}) + \epsilon_{sce}$           \\
     \thead{\\}                  &$f_{sce}(X_{ll})$                       & $x_{year}$                           && $\tilde{y}_{dce} = f_{dce}(x_{year}) + \epsilon_{dce}$        \\
     \\
     \hline
     \\
-    \thead{Second\\layer}       &$y_{cmBinary}$                           &  $f_{cm}(x_{year})$, $f'_{cm}(x_{year})$, $f''_{cm}(x_{year})$, $F_{cm}(x_{year})$, $f_{dce}(x_{year})$, $f'_{dce}(x_{year})$, $f''_{dce}(x_{year})$, $F_{dce}(x_{year})$ : $X_{patterns}$     &&$\tilde{y}_{prob}$ \\
+    \thead{Second\\layer}       &$y_{cmBinary}$                           & $X_{patterns} =$  $f_{cm}(x_{year})$, $f'_{cm}(x_{year})$, $f''_{cm}(x_{year})$, $F_{cm}(x_{year})$, $f_{dce}(x_{year})$, $f'_{dce}(x_{year})$, $f''_{dce}(x_{year})$, $F_{dce}(x_{year})$     &&$\tilde{y}_{prob}$ \\
     \\
     \hline
 	\end{tabular}
 \end{center}
-\caption{\footnotesize{Targets, features and estimates pertaining to the various estimation efforts in the two next sections. For brevity I omit the extrapolation efforts in the table}}\label{overview}
+\caption{\footnotesize{Targets, features and estimates pertaining to the various estimation efforts in the two next sections. For brevity I omit the extrapolations in the table}}\label{overview}
 \end{table} 
 
 % Math will be in the appendix
@@ -881,10 +881,10 @@ Turning from the hyperparameters to the actual estimated functions; \autoref{cm_
 The samples in \autoref{cm_sampel_eks} illustrates in practice how the criteria for theoretical coherent (temporal) conflict patterns are fulfilled by using Gaussian processes. Information is drawn from all past included years; the volatility of past conflict impact the magnitude of estimated future conflicts; the influence of past observations decline over time; and the deterioration rate of influence is estimated, as opposed to guessed at.\par
 
 % What it does not capture: two steps ot ammend
-What the functions $f_{cm}$ do not capture however, is the spatial diffusion of conflict. Just as conflict can move through time, it can also move through space. I need a measure capturing, not just the specific patterns pertaining to a specific cell, but also a measure capturing how exposed the cell is to the conflict patterns of proximate cells. To create such measure I need to make two estimations. First, I estimate a 2D Gaussian process for each separate year in the training set using longitude and latitude as features ($x_{lat}$, $x_{long}$: $X_{ll}$) and conflict magnitude  ($y_{cm}$) as target. I call this static conflict exposure ($sce$). This measure simply tells us how exposed a given cell is to conflict in a given year, without taking into account any temporal patterns. Secondly, I also want this measure to capture the spatial patterns across time and to be able to extrapolate values into the future. To achieve this I simply estimate a 1d Gaussian process similar to that already implemented to estimate $\tilde{y}_{cm}$. Once more I use $x_{year}$ as the sole feature, but instead of conflict magnitude ($y_{cm}$) as target, I use the values obtained through $f_{sce}$ as my target $y_{dce}$. The estimate I derive is one of dynamic conflict exposure $\tilde{y}_{dce}$. Instead of only taking into account the past patterns of the individual cell, this measure takes into account the past patterns of all cells in the relevant vicinity.\par 
+The functions $f_{cm}$ only captures the temporal patterns. To capture the spatial patterns more explicitly I need $f_{dce}$. But to get this function I must first estimate a 2D Gaussian process for each separate year in the training set using longitude and latitude as features ($x_{lat}$, $x_{long}$: $X_{ll}$) and conflict magnitude ($y_{cm}$) as target. This is the measure static conflict exposure ($sce$). It is "static" since I have yet to take time into account - the measure simply tells us how exposed a given cell is to conflict in a given year, without taking into account any temporal patterns. Secondly, I simply estimate a 1d Gaussian process similar to that already implemented to estimate $\tilde{y}_{cm}$. Once more I use $x_{year}$ as the sole feature, but instead of conflict magnitude ($y_{cm}$) as target, I use the values obtained through $f_{sce}$ as my target $y_{dce}$. The estimate I derive is one of dynamic conflict exposure $\tilde{y}_{dce}$. Instead of only taking into account the past patterns of the individual cell, this measure takes into account the past patterns of all cells in the relevant vicinity.\par 
 
 % SCE
-I first estimate the shared hyperparameters and error term $\ell_{sce}$, $\eta_{sce}$ and $\epsilon_{sce}$ for a 2D Gaussian process pertaining to the spatial conflict patterns pertaining to each specific year in the training set. Conflict magnitude is my target $y_{cm}$ and I use longitude $x_{long}$ and latitude $x_{lat}$ as the features $X_{ll}$. This gives me an estimate of static conflict exposure $\tilde{y}_{sce}$. It is "static" since I have yet to take time into account. The mathematical notation can be found in equations \ref{eq:form_sce}, \ref{eq:func_sce}, \ref{eq:m_sce} and \ref{eq:k_sce}.  The priors for $\epsilon_{sce}$, $\eta_{sce}$, $\ell_{sce}$ can all be found in the appendix, \autoref{scePrior}.\par
+Starting with the first step I estimate the shared hyperparameters and error term $\ell_{sce}$, $\eta_{sce}$ and $\epsilon_{sce}$ for a 2D Gaussian process pertaining to the spatial conflict patterns pertaining to each specific year in the training set. Conflict magnitude is my target $y_{cm}$ and I use longitude $x_{long}$ and latitude $x_{lat}$ as the features $X_{ll}$. This gives me an estimate of static conflict exposure $\tilde{y}_{sce}$. The mathematical notation can be found in equations \ref{eq:form_sce}, \ref{eq:func_sce}, \ref{eq:m_sce} and \ref{eq:k_sce}.  The priors for $\epsilon_{sce}$, $\eta_{sce}$, $\ell_{sce}$ can all be found in the appendix, \autoref{scePrior}.\par
 
 \[
 \widetilde{log(CF)} = f_{sce}(X_{ll}) + \epsilon_{sce} \tag{23} \label{eq:form_sce}
@@ -903,7 +903,7 @@ k_{sce}(X_{ll},X_{ll}') = \eta_{sce}^2 exp\left(-\frac{|X_{ll}-X_{ll}'|^2}{2\ell
 \]
 
 % hyper parameters and sample
-As before, I first estimate the hyperparameters and error term $\eta_{sce}$, $\ell_{sce}$, $\epsilon_{sce}$. I have no intention of extrapolating these patterns into unknown geografical regions so I do not introduce any $X_{llNew}$. The estimated hyperparameters and error term can be found in \autoref{sce_hp}. To visualize the output, the static conflict patterns pertaining to 2012 are plotted in \autoref{sce_sampel_eks}.\par
+As before, I first estimate the hyperparameters and error term $\eta_{sce}$, $\ell_{sce}$, $\epsilon_{sce}$. Since I have only estimated the function over spatial dimensions I cannot extrapolate into future year $x_{yearsNew}$ (yet) and I have no intention of extrapolating the patterns into unknown geografical regions so I do not introduce any $X_{llNew}$. The estimated hyperparameters and error term can be found in \autoref{sce_hp}. To visualize the output, the static conflict patterns pertaining to 2012 are plotted in \autoref{sce_sampel_eks}.\par
 
 
 % HP table
@@ -929,7 +929,7 @@ As before, I first estimate the hyperparameters and error term $\eta_{sce}$, $\e
 \end{table}
 
 % Int. the estimated hps
-Looking at the hyperparameters, the most informative is once again the lenghtscale $\ell_{sce}$. There is a 95\% probability that $\ell_{sce}$ is between 1.2 and 1.4 with my point estimate being 1.3. In substantial terms this tells us that conflict magnitude is relatively stable within a radius of roughly 130 kilometers. To illustrate the actual spatial patterns estimated I have plotted the obtained $\tilde{y}_{sce}$ values pertaining to 2012 in \autoref{sce_sampel_eks}.\par
+Looking at the hyperparameters, the most informative is once again the lenghtscale $\ell_{sce}$. There is a 95\% probability that $\ell_{sce}$ is between 1.2 and 1.4 with my point estimate being 1.3. In substantial terms this tells us that conflict magnitude is relatively stable within a radius of roughly 130 kilometers. To illustrate the actual spatial patterns estimated I have plotted the obtained $\tilde{y}_{sce}$ values pertaining to 2012 in \autoref{sce_sampel_eks}. Similar, but unconnected, output is estimated for all years in the training set.\par
 
 % Something about eta and epsilon - eta is smaller then epsilon.. That is somthing to comment on. A lot of things cell specific stuf is not captured here.  But we also wants general patterns
 The ratio between $\eta$ and $\epsilon$ tells us that there is a lot of variation not explained by our 2D function. Indeed, with $\epsilon$ being twice as large as $\eta$ it appears my function only captures $1/3$ of the total variation in conflict exposure. There are two simple reasons why this is not overly surprising. First of all there are many unknown/unincluded factors separating the different cells from each other. One cell might include a major city, another a great lake. One might be inhabited by a wealthy elite and another by a marginalized and/or poor minority. Secondly, just because a cell did not experience conflict, it does not mean that there was no risk of conflict. What the four features pertaining to the spatial patterns of conflict are meant to capture is not whether or not a given cell experience conflict, but simply whether or not it is exposed to conflict. Thus this ratio poses no apparent problem.\par
@@ -944,7 +944,7 @@ The ratio between $\eta$ and $\epsilon$ tells us that there is a lot of variatio
 What I illustrate in \autoref{sce_sampel_eks} is simply an estimated 2D function over the conflict magnitude of all cells in 2012. We see that the spatial patterns estimated conforms neatly to the theoretical expectation regarding spatial conflict patterns. Information is drawn from all relevant events in the specific year, taking into account both the magnitude and the distance of said events, the deterioration rate of influence is estimated from the available data; conflict diffusion appears fundamentally bell-shaped and radiates out from specific centers. Further, looking at examples such as Nigeria, Somalia and especially Afghanistan we also see how patterns such as circulation produces different results compared to tangency.\par  
 
 % Moving on to dce.
-Naturally, these measures of exposure also need to be connected across time. As such, the next step is to create the estimate $\tilde{y}_{dce}$. To this end, I simply repeat the steps taken to estimate $\tilde{y}_{cm}$. Now, instead of using $y_{cm}$ as target I use the estimated values obtained from $f_{sce}(X_{ll})$ as my target. I denote this estimate $\tilde{y}_{dce}$. Beyond that small change, the procedure is identical. The mathematical specifications are presented in equation \ref{eq:form_dce}, \ref{eq:func_dce}, \ref{eq:m_dce} and \ref{eq:k_dce}.\par 
+To connected this measure across time and facilitate extrapolation into future years the next step is to estimate $\tilde{y}_{dce}$. To this end, I simply repeat the steps taken to estimate $\tilde{y}_{cm}$. Now, instead of using $y_{cm}$ as target I use the estimated values obtained from $f_{sce}(X_{ll})$ as my target. I denote this estimate $\tilde{y}_{dce}$. Beyond that small change, the procedure is identical. The mathematical specifications are presented in equation \ref{eq:form_dce}, \ref{eq:func_dce}, \ref{eq:m_dce} and \ref{eq:k_dce}. The priors for $\epsilon_{dce}$, $\eta_{dce}$, $\ell_{dce}$ can be found in the appendix, \autoref{dcePrior}.\par
 
 \[
 \tilde{y}_{dce} = f_{dce}(x_{year}) + \epsilon_{dce} \tag{27} \label{eq:form_dce}
@@ -1024,68 +1024,83 @@ I train 1000 xgboost models using the training data. Every model uses the comple
 %A most likely estimate of the predicted probability can be obtain from this distribution along with the an estimate of the variance of the distributions.\par
 %[can be programmed better]
 
+
+
+
 % What comes out
 The genereated predictions are expressed as probabilities. Specifically, probabilities that some given grid cell will experience conflict the specific (test) year. As such the full outputs are probability distributions of probabilities. The individual probabilities are adjusted via Bayesian correction to account for the undersampling technique and a maximum likelihood estimate is obtained from each individual distribution of probabilities. Given that the distributions appear Gaussian, the maximum likelihood estimate is simply the mean and represents my best guess of what the probability of conflict is in a given cell, in a specific year.\par 
 
 %[evt. fig eks?]
 
 % Bridge
-To evaluate to what extent my framework, and as such the features I have created, have successfully capture the patterns of conflict, I will now compare these probabilities to the actual observations contained in the test set $y_{binaryTest}$. The results will be presented in the next section.\par
+To evaluate to what extent my framework, and as such the features I have created, have successfully captured the patterns of conflict, I will now compare these probabilities to the actual observations contained in the test set $y_{binaryTest}$. The results will be presented in the next section.\par
 
 \section{The Results}
 % [Analysis]
 % I virkeligheden mest bare resultaterne; start bare hård med et resultat.
 
 % Whats gonna happen here.
-In the preceding sections I have shown how we can estimate and extrapolate the temporal and geo-spatial patterns of past conflicts using modern machine learning techniques. However, I have yet to demonstrate whether these estimated patterns hold any predictive power -- whether they can actually by used to forecast the time and place of future conflicts. In the following section I will evaluate the predictive performance of my approach to assess the extent to which the constructed features hold prediction power pertaining to time and place of future conflicts. Further more I will briefly asses which of my eight included features holds the most prediction power.\par 
+In the preceding sections I have shown how we can estimate and extrapolate the temporal and geo-spatial patterns of past conflicts using modern machine learning techniques. However, I have yet to demonstrate whether these estimated patterns hold any predictive power -- whether they can actually by used to forecast the time and place of future conflicts. In the following section I will evaluate the predictive performance of my approach in order to assess the extent to which the constructed features hold prediction power pertaining to time and place of future conflicts. Further more I will briefly asses which of my eight included features holds the most prediction power.\par 
 %RQ: How can we use effectivly the temporal and geo-spatial patterns of past conflicts to forecast and predict the time and place of future conflicts?
 
 \subsection{The predictive potential}
 
 % How
-To best convey the potential of my framework, I will evaluate it from a number of angles starting with the PR-curve, the AP score, and the ROC-AUC score. Then, I will set a threshold which will be used to convert my predicted probabilities to binary predictions. From these binary predictions I derive the rates of true positives, false positives, true negatives and false negatives as well as the related measures precision and recall. Finally I evaluate the relative importance for the eight features used in the framework.\par
+To best convey the potential of my framework, I will evaluate it from a number of angles starting with the PR-curve, the AP score, and the ROC-AUC score. Then, I will set a threshold which will be used to convert my predicted probabilities to binary predictions. From these binary predictions I derive the rates of true positives, false positives, true negatives and false negatives as well as the related measures precision and recall. Finally I evaluate the relative importance of the eight features used in the framework.\par
 
 % AP over time
-The AP score is the prime evaluation metric of interest. Since I have a distribution of predictions, I naturally also have distributions of results. In \autoref{ap_scores} I show the distributions of estimated out-of-sample AP scores for each of the test years used with point estimates simply being the mean. As expected the performance of my framework changes as I move into the future. Specifically, and as predicted by the lenghtscales $\ell_{cm}$ and $\ell_{dce}$, the performance drops substantially beyond 3 years. This is easily seen in \autoref{ap_scores} as the AP scores fall subtantially after 2015.\par
+The AP score is the prime evaluation metric of interest. Since I have a distribution of predictions, I naturally also have distributions of results. In \autoref{ap_scores} I show the distributions of estimated out-of-sample AP scores for each of the test years used with point estimates simply being the mean. As expected the performance of my framework changes as I move into the future. Specifically -- and as foretold by the lenghtscales $\ell_{cm}$ and $\ell_{dce}$ -- the performance drops substantially beyond 3 years. This is easily seen in \autoref{ap_trend} and \autoref{ap_scores} as the AP scores fall subtantially after 2015.\par
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.47]{ap_trend_alt.pdf}
+    \caption{\footnotesize{The trend in average precision as it changes over the test years. The orange line denotes the maximum likelihood estimate (mean). The blue shade denotes the actual 1000 estimates per year.}}\label{ap_trend}
+\end{figure}
+
+\autoref{ap_trend} shows how the AP score change over the test years from 0.55 in 2013 down to 42 in 2013. The orange line is the maximun likelihood estimate of the AP given all the models and blue shade is the individual estimates. This is further illustrated in \autoref{ap_scores}.\par
+
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{ap_scores.pdf}
-    \caption{\footnotesize{1000 results for each year...}}\label{ap_scores}
+    \caption{\footnotesize{Average precision distributions across all test years. Each distribution is base on the results from 1000 models}}\label{ap_scores}
 \end{figure}
 
+% the trend
+As such it is clear that is a substantial difference between my prediction power before 2015 and after. Indeed, \autoref{ap_scores} show practically no overlap between 2013, 2014 and 2015 on one side and 2016 and 2017 on the other. Looking at the actual numbers, out of all the models run, no model from 2013, 2014 and 2015 did as bad or worse then any model from 2016 or 2017. This leaves us a probability of $<0.001\%$ that our framework will performer as well after 3 years as before. For comparison there is a 2.4\% probability that $AP_{2015} \geq AP_{2013}$ and a 89.3\% probability that $AP_{2015} \geq AP_{2014}$. The point is that the lenghtscale indeed does provide powerful guidance regarding how far we can look into the future, and it should be taken quite seriously doing any real world application.\par
+
+% Regarding why 2015 is better then 2014!
+Naturally, it might seem a bit odd that my model seem to do better in 2015 then in 2014. Intuitively the predictive power of the framework should always decrease somewhat when going further into the future, or at least stay the same. As I will go future into below this is neither a flaw or a mystery. It is simply do to the fact the the patterns of 2015 coincidentally aligns more with the patterns of 2012 -- the last train year -- the 2014 does. As such, this is not a pattern I would expect to generalize beyond these particular years.\par 
+
 %selected years
-Given these results, and to keep the evaluation effort concise, I will not spend more time evaluating the two last test years 2016 and 2017. Furthermore, to mirror the challenges of real world applications I also ignore the first test year 2013. After all, the data used to train the models would not have been available before June 2013, and thus predictions regarding conflicts in 2013 would have been of limited use. Furthermore, any relevant actor -- political or otherwise -- needs some reaction time to take any forecasting into account. As such I focus on the years 2014 and 2015, respectively 6 and 18 months into the future from when the data would first have been available for analysis.\par
+Now, given these results and to keep the evaluation effort concise I will not spend more time evaluating the two last test years 2016 and 2017. To mirror the challenges of real world applications I also ignore the first test year 2013. After all, the data used to train the models would not have been available before June 2013, and thus predictions regarding conflicts in 2013 would have been of limited use. Further more, any relevant actor -- political or otherwise -- needs some reaction time to take any forecasting into account. As such I focus on the years 2014 and 2015, respectively 6 and 18 months into the future from when the data would first have been available for analysis.\par
 
 % PR-curve and ap score ( ROC and AUC..) for 
 The PR-curve and the AP score for the years 2014 and 2015 are presented in \autoref{pr_curves} while the corresponding ROC-curves and AUC scores are presented in \autoref{roc_curves}.\par 
 
-% Regarding why 2015 is better then 2014!
-Interestingly, the sresults shows better predictions for 2015 then for 2014. This is niether a flaw or a mystery. It is simply do to two novel conflicts explodes (East Ukrain and XXXXX) in 2014 and then diminishes somewhat again in 2015. As such, 2015 actually "looks" more like 2012 (last train year) than 2014.\par
-
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{pr_curves_14_15.pdf}%insert baseline
-    \caption{\footnotesize{1000 results for each year...}}\label{pr_curves}
+    \caption{\footnotesize{The precision-recall curve for the years 2014 and 2015. The orange line is the maximun likelihood point estimate while the blue shade represents the 0.99 credibility interval.}}\label{pr_curves}
 \end{figure}
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{roc_curves_14_15.pdf}
-    \caption{\footnotesize{1000 results for each year..}}\label{roc_curves}
+    \caption{\footnotesize{The receiver operating characteristic curve for the years 2014 and 2015. The orange line is the maximun likelihood point estimate while the blue shade represents the 0.99 credibility interval.}}\label{roc_curves}
 \end{figure}
 
 % Int the PR-curve and ROC curve
-The PR-curve in \autoref{pr_curves} illustrates the trade-off between recall and precision at various probability thresholds between 0 and 1, while the ROC-curve in \autoref{roc_curves} denotes the relationship between the false positive rate and the true positive rate at various thresholds. An AP score of 0.0X and AUC score at 0.5 would be equivalent to random guesses. As such with an AP score of XXX and an AUC score of 0.91 (point estimates) it is clear that the features I produced exhibits considerable predictive power. The question is how this prediction power holds up compared to other efforts using different approaches.\par
+The PR-curve in \autoref{pr_curves} illustrates the trade-off between recall and precision at various probability thresholds between 0 and 1, while the ROC-curve in \autoref{roc_curves} denotes the relationship between the false positive rate and the true positive rate at various thresholds. The share of events in both 2014 and 2015 is respectively 0.050 and 0.053. As such an AP score around 0.05 and AUC score at 0.5 is equivalent to random guesses. As such, with AP scores of 0.51 and 0.52, and AUC scores of 0.91 and 0.91 (point estimates) it is clear that the features I produced exhibit considerable predictive power. The question is how this prediction power holds up compared to other efforts using different approaches.\par
 
 % compare with last assignment 
-Intriguingly, the results presented here are better then those produced in \cite{Maase}. Specifically \cite{Maase} achieved an AP-score of 0.47 \cite[14]{Maase}. This is interesting for a number of reasons. First of all, since the results which I have produced for this thesis rely solely on conflict patterns, the superiority of my new approach reaffirms the conclusion from \cite{Maase} stating that patterns are more informative than structural features when it comes to predicting future conflicts. Secondly, the framework presented in \cite{Maase} also included features pertaining to the temporal and spatial patterns of conflicts. These features, however, were vastly less theoretically and methodologically developed compared to the eight features I use here. Point being, using only the past patterns of conflict, in a theoretically and methodologically coherent manner, have produced better predictions, than using a broad roster of more traditional structural variables in cohort with poorly operationalized patterns. Only future research will show if the predictions I present here can be further improved be reintroducing structural patterns.\par
+Intriguingly, the results presented here are better than those produced in \cite{Maase}. Specifically \cite{Maase} achieved an AP-score of 0.47 \cite[14]{Maase}. This is interesting for a number of reasons. First of all, since the results which I have produced for this thesis rely solely on conflict patterns, these results it reaffirms the conclusion from \cite{Maase} stating that patterns are more informative than structural features when it comes to predicting future conflicts. Secondly, the framework presented in \cite{Maase} also included features pertaining to the temporal and spatial patterns of conflicts. These features, however, were vastly less theoretically and methodologically developed compared to the eight features I use here. Point being, using only the past patterns of conflict, in a theoretically and methodologically coherent manner, here generates better predictions, than using a broad roster of more traditional structural variables in cohort with poorly operationalized patterns. Only future research will show if the predictions I present here can be further improved be reintroducing structural patterns.\par
 
 %compared to general stat of the art.
 Beyond the results presented in \cite{Maase}, direct comparison is less forward. My framework produces and AUC of 0.91 for both 2014 and 2015. The state of the art prediction efforts in academia achieve an AUC at approximately 0.80 \citep[14]{chadefaux2017conflict}. Importantly however, most of these past studies deal with country-level conflicts and only include novel onsets \citep[14]{chadefaux2017conflict}. This naturally makes any direct comparisons with my framework somewhat misleading. On one hand you could argue that predicting onsets is the most challenging part of conflict prediction. On the other hand, I am both predicting conflict onsets, continuation of conflict and conflict termination; and indeed at a much more disaggregated level than any efforts before this, which should make prediction harder. Point being, while direct comparison is unfeasible, I find it safe to say that the framework I have produced generates predictions at least as reliable as what previous efforts have accomplished -- if not more. Crucially, I achieve these results in a setting which emulates a real-world scenario. Most previous efforts, on the other hand, have relied on structural data, ignoring the fact that this data would already be dated by the time of release. In a real-world setting this would surely lower the predictive capabilities of frameworks relying on structural features greatly compared to what is presented in published papers.\par
 
 % problam with onsets
-It should also be noted that when we analyze conflicts on a highly disaggregated level and treat conflict as a function of past temporal and spatial patterns, the concept of a "hard" onset appears somewhat theoretical blurred. It does not make much sense to say that one single cell experienced an actual conflict onset if the the conflict simply spread from one er more neighboring cell -- possible only a few kilometers away. Remember these cells are nothing but analytically constructs aligning with no structural or geografical features. And even when conflict diffuses across political boundaries such as country boarders  -- e.g. The Duran line between Afghanistan and Pakistan --  the conflict might well be the same and the notion of an new onset still misleading. Novel onset do happen, but we need to think about the phenomenon differently then we used to. Furthermore, it should be noted that for policy purposes, predicting both termination and continuation of conflicts seems just as relevant as predicting conflict onsets.\par  
+It should also be noted that when we analyse conflicts on a highly disaggregated level and treat conflict as a function of past temporal and spatial patterns, the concept of a "hard" onset appears somewhat theoretical blurred. It does not make much sense to say that one single cell experienced an actual conflict onset if the the conflict simply spread from one er more neighboring cell -- possible only a few kilometers away. Remember these cells are nothing but analytically constructs aligning with no structural or geographical features. And even when conflict diffuses across political boundaries such as country boarders  -- e.g. the Duran line between Afghanistan and Pakistan --  the conflict might well be the same and the notion of a new onset still misleading. Novel onsets do happen but we need to think about the phenomenon differently then we used to. Further more, it should be noted that for policy purposes, predicting both termination and continuation of conflicts is arguably just as relevant as predicting conflict onsets.\par  
 
 % Compare to using just the last opserved value
 
@@ -1099,23 +1114,23 @@ Any threshold is bound to be more or less arbitrary. I simply choose to set a th
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{confusion_map_2014.pdf}
-    \caption{\footnotesize{stuff...}}\label{confusion_map_2014}
+    \caption{\footnotesize{The map is created by binarizing the estimated probabilities of conflict in 2014 and comparing this to the actual binary observations from 2014. Given the threshold of 0.10, all cells with a probability of conflict above 0.10 are classified as conflicts, while all cells with a probability of 0.10 or below are classified as non-conflicts.}}\label{confusion_map_2014}
 \end{figure}
 
 % Int the plots - the good
-The first thing to notice is that most of my classifications are true negatives. Most cells do not experience conflict most of the time, and my framework captures this. Secondly my framework is able to generate a large amount of true positives. Remember these predictions are generated on the basis of respectively two and three years old data and each cell is only approximately $50km\times50km$. Point being, this is a extremely hard classification task, yet my framework still does rather well - not least considering that I only incorporate past conflict patterns as predictors.\par
+Interpreting these maps, we get a more substantial evaluation of the frameworks performance. The first thing to notice is that most of the classifications are true negatives. Most cells do not experience conflict most of the time, and my framework captures this. Secondly the framework is able to generate a large amount of true positives. Remember these predictions are generated on the basis of respectively two and three years old data and each cell is only approximately $50km\times50km$. Point being, this is a extremely hard classification task -- not least considering that I only incorporate past conflict patterns as predictors. As such, the performance of the framework does inspire optimism.\par
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{confusion_map_2015.pdf}
-    \caption{\footnotesize{stuff..}}\label{confusion_map_2015}
+    \caption{\footnotesize{The map is created by binarizing the estimated probabilities of conflict in 2015 and comparing this to the actual binary observations from 2015. Given the threshold of 0.10, all cells with a probability of conflict above 0.10 are classified as conflicts, while all cells with a probability of 0.10 or below are classified as non-conflicts.}}\label{confusion_map_2015}
 \end{figure}
 
 % Int the plots - the bad1 false negatives
-However, it should also be clear from \autoref{confusion_map_2014} and \autoref{confusion_map_2015} that there is still a lot of room for improvement. It is especially clear in 2014 where my framework completely misses two major conflicts. A novel conflict in south-east Ukraine and a great surge of conflict in the Central African Republic. While it is unfortunate that my framework misses these conflicts, it is not surprising. The conflict in Ukraine is far removed in both time and space from any other conflict, thus no past patterns were there to alert my framework. The conflict in the Central African Republic, on the other hand, has a long history of conflict and is surrounded by other conflict prone regions. As such my framework also predicts some sporadic conflicts scattered around the country, but not nearly as widespread a conflict as that actually data indicates. The reason is simply that a peace agreements have been finalized in the last years of my test set, but said deals fail spectacularly in the beginning of the test years [REF!!!]. As such, the patterns I have extrapolated are those of a declining, not an increase or ongoing, conflict. These two examples clearly show the limits of my framework. Sudden and abrupt changes in the political landscape will always elude a framework solely based on the past spatial and temporal patterns of conflicts.\par
+However, it should also be clear from \autoref{confusion_map_2014} and \autoref{confusion_map_2015} that there is still a lot of room for improvement. It is especially clear in 2014 where my framework completely misses two major conflicts. A novel conflict in south-east Ukraine and a great surge of conflict in the Central African Republic. While it is unfortunate that my framework misses these conflicts, it is not surprising. The conflict in Ukraine is far removed in both time and space from any other conflict, thus no past patterns were there to alert the framework. The Central African Republic, on the other hand, has a long history of conflict and is surrounded by other conflict prone regions. As such my framework also predicts some sporadic conflicts scattered around the country, but not nearly as widespread a conflict as that actually data indicates. The reason is simply that a peace agreements have been finalized in the last years of my test set, but said deals fail spectacularly in the beginning of the test years \cite{bbc}. As such, the patterns I have extrapolated are those of a declining, not an increase or ongoing, conflict. These two examples clearly show the limits of my framework. Sudden and abrupt changes in the political landscape will always elude a framework solely based on the past spatial and temporal patterns of conflicts.\par
 
 % Int the plots - the bad2 false positives
-It is also clear from \autoref{confusion_map_2014} and \autoref{confusion_map_2015} that I do generate some false positives. These, however, are somewhat less problematic than false negatives for a number of reasons. First of all, just because conflict did not rise in a given cell, it does not mean that the risk of conflict in that particular cell was not real. As an example, a large region from Eastern Turkey over northern Syria, northern Iraq and into western Iran is classified as conflicts in 2014, yet no conflict ensued that year. This region corresponds in large to the geographical region of Kurdistan, and has historically been the sight of many conflicts [REF!!!].  Indeed, we also see conflict erupt in the region again in 2015 where many of my false positives change to true positives. This does not prove that there was a risk of conflict in 2014, but it surely does make it rather plausibly. The danger of false positives is that resources might be allocated to prevent conflict when no conflict is likely to happen. However, if the false positives tend to indicate high risk zones where conflict simply failed to erupt due more or less to chance, allocating resources here might not constitute any huge waste after all.\par
+It is also clear from \autoref{confusion_map_2014} and \autoref{confusion_map_2015} that I do generate some false positives. These, however, are somewhat less problematic than false negatives for a number of reasons. First of all, just because conflict did not rise in a given cell, it does not mean that the risk of conflict in that particular cell was not real. As an example, a large region from Eastern Turkey over northern Syria, northern Iraq and into western Iran is classified as conflicts in 2014, yet no conflict ensued that year. This region corresponds in large to the geographical region of Kurdistan \citep[271-272]{DahlmanKurdistan}, which has historically been the sight of many conflicts \citep{DahlmanKurdistan}.  Indeed, we also see conflict erupt in the region again in 2015 where many of my false positives change to true positives. This does not prove that there was a risk of conflict in 2014, but it surely does make it rather plausibly. The danger of false positives is that resources might be allocated to prevent conflict when no conflict is likely to happen. However, if the false positives tend to indicate high risk zones where conflict simply failed to erupt due more or less to chance, allocating resources here might not constitute any huge waste after all.\par
 
 
 %+++++++++++++++++++++++++++++++++++++++
@@ -1336,19 +1351,35 @@ With these paths for future research presented I concluded this thesis on an opt
 \bibliographystyle{apalike} 
 \bibliography{conflict.bib}
 
+\pagebreak
 \section{Appendix}
 
 \subsection{Priors - Conflict magnitude}\label{cmPrior}
 
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.47]{Hyper-priors(cm).pdf}
+    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of conflict magnitude. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}\label{roc_curves}
+\end{figure}
+
 \subsection{Priors - Static conflict exposure}\label{scePrior}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.47]{Hyper-priors(sce).pdf}
+    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of static conflict exposure. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}\label{roc_curves}
+\end{figure}
 
 \subsection{Priors - Dynamic conflict exposure}\label{dcePrior}
 
-
-[...]
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.47]{Hyper-priors(dce).pdf}
+    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of dynamic conflict exposure. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}\label{roc_curves}
+\end{figure}
 
 %\subsection{Visual illustration of Gaussian distribution and Gaussian process}\label{GDGP}
 
-[...]
+
 
 \end{document}
