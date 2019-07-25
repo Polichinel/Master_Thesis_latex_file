@@ -590,7 +590,7 @@ A further features of the specific objective function is that is is self-regular
 There are a large number of other regularization strategies and mechanism which also plays a part in the actual implementation of xgboost \citep[787]{Chen_2016}. However, to review them all is far beyond the scope of this project. Thus I move on to the final characteristics of the algorithm which needs introduction here. Its transparency.\par
 
 % Feature imp.
-Since the xgboost algorithm is based on tree structures, we can readily asses which splits generated most prediction power, and thus which features are most \emph{important} in regards to the combined prediction effort. Importance here meaning how much prediction power the specific feature contribute with, compared the the other features \citep[787-788]{Chen_2016}. While this tells us nothing about causation, it is still highly relevant for guiding future prediction frameworks, informing theoretical debates pertaining to explanations and for formulation of concrete policy recommendations.\par
+Since the xgboost algorithm is based on tree structures, we can readily asses which splits generated most prediction power, and thus which features are most \emph{important} in regards to the combined prediction effort. Importance here meaning how much prediction power the specific feature contribute with, compared the the other features \citep[787-788]{Chen_2016}. As such, feature importance should be understood as a relative measure comparing how much information a specific features bring the the effort compared to the other features \cite[367-368]{Friedman_2001}. While this tells us nothing about causation, it is still highly relevant for guiding future prediction frameworks, informing theoretical debates pertaining to explanations and for formulation of concrete policy recommendations.\par
 
 % Bridge - good for undersampling but no good enough
 Naturally, this is a very superficial introduction to the xgboost algorithm; nevertheless it serves to illustrate why this algorithm is especially suited for the endeavour at hand. The boosting element makes the algorithm suitable for rare events and the fact that is is based on regressions trees both allows for automatic generation of interactions and for assessment of feature importance. Importantly, the specific trees used in this algorithm are self-regularizing thus discouraging overfitting. A suitable framework indeed. Yet I can still do more the. Particularly in regard to the imbalance of the data. The next section will introduce a number of \emph{undersampling} techniques which I implement to further tackle the rarity of conflict events.\par 
@@ -1025,8 +1025,6 @@ I train 1000 xgboost models using the training data. Every model uses the comple
 %[can be programmed better]
 
 
-
-
 % What comes out
 The genereated predictions are expressed as probabilities. Specifically, probabilities that some given grid cell will experience conflict the specific (test) year. As such the full outputs are probability distributions of probabilities. The individual probabilities are adjusted via Bayesian correction to account for the undersampling technique and a maximum likelihood estimate is obtained from each individual distribution of probabilities. Given that the distributions appear Gaussian, the maximum likelihood estimate is simply the mean and represents my best guess of what the probability of conflict is in a given cell, in a specific year.\par 
 
@@ -1140,28 +1138,26 @@ It is also clear from \autoref{confusion_map_2014} and \autoref{confusion_map_20
 %+++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++
 % What is then the precision and recall - and what does this mean..
-Given the specific threshold I here use, and averaging the two years 2014 and 2015, I obtain a recall of XXX and a precision of XXX. Naturally this ratio is highly dependent on the specific threshold I employ, but these results can still do a lot to convey the potential of my framework. Thus in substantial terms; my framework is able to correctly classify XX\% of all conflicts, but in the process it will also misclassifies XX\% of non-events as events. That is, each time I corretly classify one true positive I will also generate XX false positives. 
+Given the specific threshold I here use, I obtain a recall of respectively 0.51 and 0.57 and a precision of respectively 0.56 and 0.52 for the years 2014 and 2015. Thus in substantial terms; my framework is able to correctly classify slightly over half of all conflicts cells, but in the process I will roughly produced one false positive for each true positive. Naturally this ratio is highly dependent on the specific threshold I employ, but these results can still do a lot to convey the potential of my framework. Again, given the imbalanced and the highly disaggregated nature of the data and the sole focus on patterns, this is a descent result -- but does leave a lot of room for improvement. Naturally, such improvement might need to come from the inclusion of more features from other data sources. These paper, after all, only present one piece of the puzzle for creating a complete early warning system, and there likely is limit to the amount of information we can extract from patterns alone.\par
 
-% SO
-Again these results shows that the framework do carry a lot of potential but improvements and the inclusion of more features from other data sources are likely needed if my framework is to paly a part in a real world application. This is no suprice since he framework here presented only constitue one of many components needed to create a complete early warning system.\par
+% bridge
+That being siad, future research should naturally survey both the potential of including more data and even better handling of past conflict patterns. To inform such efforts the next subsection will briefly touch upon the subject of feature importance. That is, assessing how much prediction power each of my eight features brings to the final predictive framework.\par 
 
+%Knowing the extent to wich the various features contributed with prediciton power will 
 
 \subsection{Feature importance}
 
-% Lastly feaute importance
-The last thing I will touch upon here is feature importance. That is, assessing how much prediction power each of my eight features brings to the final predictive framework. This importance measure should be understood as a relative measure comparing how much information a specific features bring the the effort compared to the other features. \autoref{feature_imp} presents the results.\par 
+% only 2014
+Regarding feature importance, I find no difference between 2014 and 2015. As such I will only here present the results for 2014. The results from 2015 are vitually indentical and can be found in the appendix. \autoref{feature_imp2015}. The results from 2014 can be seen in \autoref{feature_imp2014}.\par 
 
-% \begin{figure}[!htb]
-%  	\centering
-%	\includegraphics[scale=0.47]{feature_imp.pdf}
-%   \caption{\footnotesize{stuff..}}\label{feature_imp}
-% \end{figure}
+\begin{figure}[!htb]
+ 	\centering
+	\includegraphics[scale=0.47]{feature_imp_2014.pdf}
+  \caption{\footnotesize{stuff..}}\label{feature_imp2014}
+\end{figure}
 
 % What is then the most imp feature?
-From \autoref{feature_imp} it is clear that the majority of the prediction power comes from the base feature of conflict magnitude $f_{cm}$. Interestingly this is the most simple feature in the framework simply denoting the expected future conflict magnitude in some cell given said cells history. It is easily understood and I only use a single 1D Gaussian process to derive this measure. As such, future efforts aimed both at prediction and estimation might gain a lot from simply including this measure, if the measures including the explicate spatial dimensions are deemed to resource demanding. That being said it is still clear from \autoref{feature_imp} that all the features do bring some information to the effort. As such I recommend all eight being included in any complete early warning system.\par
-
-% Why do you think this is the case?
-%....
+From \autoref{feature_imp2014} it is clear that the majority of the prediction power comes from the base feature of conflict magnitude $f_{cm}$. Interestingly this is the most basic feature in the framework simply denoting the expected future conflict magnitude in some cell given said cells history. It is easily understood and I only use a 1D Gaussian process to derive this measure. As such, future efforts aimed both at prediction and estimation might gain a lot from simply including this measure, if measures of the explicate spatial dimensions are deemed to resource demanding. That being said it is still clear from \autoref{feature_imp2014} that all the features do bring some information to the effort. As such I recommend all eight being included in any complete early warning system.\par
 
 % Bridge
 This finalizes my evaluation of the predictive framework I created for these thesis. In the next section I will concluded the entire endeavour by summing up all major insights and results which I have presented throughout this thesis. The conclusion is followed by a prospective look in the future where I discuss how we should proceed from here to create a fully functional early warning system for conflict forecasting.\par
@@ -1169,26 +1165,23 @@ This finalizes my evaluation of the predictive framework I created for these the
 \section{The Conclusion}
 
 %What was your starting point
-Previous research has shown that past conflict patterns hold a lot of predictive potential when it comes to predicting future conflicts. As such, if we are to create an early warning system for conflict forecasting, such system should include a component focused on extracting prediction power from past temporal and spatial patterns of conflict. However, previous efforts -- estimations and predictions alike -- have to a large extent failed to create features mirroring the theoretical insights we have regarding conflict patterns. To best utilize the predictive potential of past conflict patterns we need a tool that can capture conflict patterns in a manner which complies with the general theoretical expectations of conflict patterns. In this thesis I illustrate that the machine learning technique of Gaussian processes can be such a tool. Using an approach based on Gaussian processes I thus show how we can capture the temporal and geo-spatial patterns of past conflicts and use these patterns to forecast and predict the time and place of future conflicts.\par
+Previous research has shown that past conflict patterns hold a lot of potential when it comes to predicting future conflicts. As such, if we are to create an early warning system for conflict forecasting, such system should include a component focused on extracting prediction power from past temporal and spatial patterns of conflict. However, previous efforts -- estimations and predictions alike -- have to a large extent failed to create features mirroring the theoretical insights we have regarding conflict patterns. To best utilize the predictive potential of past conflict patterns we need a tool that can capture conflict patterns in a manner which complies with the general theoretical expectations of conflict patterns. In this thesis I illustrate that the machine learning technique of Gaussian processes can be such a tool. Using an approach based on Gaussian processes I thus show how we can capture the temporal and geo-spatial patterns of past conflicts and use these patterns to forecast and predict the time and place of future conflicts.\par
 %\emph{\textbf{Research Question:} How can we efficiently use the temporal and geo-spatial patterns of past conflicts to forecast and predict the time and place of future conflicts?}\par
 
 % how do you do it
 Using Gaussian processes I created eight features each pertaining the spatial and/or temporal patterns of conflicts. These patterns were extrapolated into future years and the extrapolations used to predict the probability of conflict in the geographical grid cells, which I used as unit of analysis.\par
 
 % What did you find?
-I used a predictive framework based on xgboost and undersampling along with out-of-sample prediction to evaluate the predictive potential of the extracted and extrapolated conflict patterns. Using my approach to forecast two and three years into the future I achieved an average AP score of XXX against a baseline of XXX and and average AUC score of XXXX against a baseline of 0.5. In more substantial terms; if I set a probability threshold at XXXX I am able to correctly predict XXX\% of all conflicts, but doing this will also generate in XXX false positive for each true positive.\par 
+I used a predictive framework based on xgboost and undersampling along with out-of-sample prediction to evaluate the predictive potential of the extracted and extrapolated conflict patterns. Using my approach to forecast respectivly two and three years into the future I achieved AP scores of 0.51 (2014) and 0.52 (2015) against a baseline roughly 0.05. For both years I achieved an AUC score of 0.91 against a baseline of 0.50. In more substantial terms; if I set a probability threshold at 0.10 I am able to correctly predict half of all conflicts, but doing this will also generate in one false positive for each true positive. Naturally I am able to capture more true positives, at the price of relatively more false positive.\par 
 
 % is that good?
-Given the highly disaggregated unit of analyses and the subject at hand these are encouragingly results which definitely shows that past conflict patterns do hold a lot of predictive potential -- not least when they are captured in a theoretical and methodological coherent manner. That being said it is also clear that we still have work to do before an actual (reliable) early warning system can be compiled.\par 
+Given the highly disaggregated unit of analyses, the imbalance of the data and the subject at hand these are encouragingly results which definitely shows that past conflict patterns do hold a lot of predictive potential -- not least when they are captured in a theoretical and methodological coherent manner. That being said it is also clear that we still have work to do before an actual reliable early warning system can be compiled.\par 
 
 % compared to efforts?
-Unfortunately my results are somewhat hard to compare to previous efforts -- not least due the highly disaggregated unit of analysis. The only effort which is directly comparable is \cite{Maase} which my approach here outperforms despite that fact the \cite{Maase} includes both conflict patterns and structural features. While comparison with other efforts is less forward it is clear that the framework presented here does at least as well, if not better, than the state of the art. Notably this is done using only past patterns, and in a setting which emulates a real world scenario. The later point contrast to many previous efforts where researches ignores the fact that the data their used would be rather dated in a real world setting. As such, while I still have a lot of work in front of my, this thesis present a substantial step forward, towards the creation of a actual early-warning-system for conflict forecasting.\par
+Unfortunately my results are somewhat hard to compare to previous efforts -- not least due the highly disaggregated unit of analysis. The only effort which is directly comparable is \cite{Maase} which my approach here outperforms despite that fact the \cite{Maase} includes both conflict patterns and structural features. While comparison with other efforts is less forward it is clear that the framework presented here does at least as well, if not better, than the state of the art. Notably this is done using only past patterns, and in a setting which emulates a real world scenario. The later point contrast to many previous efforts where researches ignores the fact that the data their used would be rather dated by the time it is actually made available. As such, while I still have a lot of work in front of my, this thesis present a substantial step forward, towards the creation of a actual early-warning-system for conflict forecasting.\par
 
 % what is next/bridge
-As presented, using the patterns of past conflicts as a predictor only constitute one of several components needed to create a complete early warning system. Naturally, there is no final answers concerning how many or which specific components are needed to create a fully operational early warning system. As such, in the next and final section I will present a number of components which I recommend being the focus of future studies.\par
-
-% but what about pattern recognition with ANN?
-
+As presented, using the patterns of past conflicts as a predictor only constitute one of several components needed to create a complete early warning system. Naturally, there are no final answers concerning how many or which specific components are needed to create a fully operational early warning system. As such, in the next and final section I will present a number of components which I recommend being the focus of future studies.\par
 
 \section{Futher Perspectives}
 % For estimaion: if you want arguement regarding baseline model look at \cite{schutte2011diffusion}.
@@ -1196,153 +1189,31 @@ As presented, using the patterns of past conflicts as a predictor only constitut
 % Selvkritik - også vedrørende de mål du bruger måkse....
 
 % Weakness of you approach/GP's
-Using past efforts as predictors does result in some natural limitations. We will never be able to predict truly novel conflicts removed in time and space from any previous conflicts using such approach alone. We might be able to achieve even better results with Gaussian processes then what I have presented above. This might be done be distinguishing between long term trends and short term trends or by using hierarchical hyper priors. Furthermore other even more involved methods such as artificial neural networks might be able to capture the patterns of conflict in even more effective ways. But while these opportunities should be explored in future researche, they will never ammend the fundamental limitation of using past patterns to predict future patterns. As such, while patterns should be a central component in any early warning system, they should also only be one of many.\par
+Using past efforts as predictors does result in some natural limitations. Most prominently, we will never be able to predict truly novel conflicts far removed in time and space from any previous conflicts using such approach alone. We might be able to achieve even better results with Gaussian processes then what I have presented above. This might be done be distinguishing between long term trends and short term trends or by using hierarchical hyper priors. Furthermore other even more involved methods such as artificial neural networks might be able to capture the patterns of conflict in even more effective ways. But while these opportunities should be explored in future researche, they will never ammend the fundamental limitation of using past patterns to predict future patterns. As such, while patterns should be a central component in any early warning system, they should also only be one of many.\par
 
 % Perhaps somthing about other events: political unrest, riots ect..
 %One solutions could be to bring in other event data, such as data on demonstrations, riots, civil unrest ect. but that wich is avialeel is data... MORE
 
 % one solution: reintroduce structural patterns and ammend thier weakneess with GP's
-An other component should focus on structural data and theory on the structural prerequisites of intra-state conflict, such as poverty, resources, regime ect. The advantages of such a component is the large catalog of theory following it \citep{Collier_Hoeffler_1998, Fearon_Laitin_2003, Collier_Hoeffler_2004, Hegre_Sambanis_2006, Kalyvas_2007, Goldstone_2010, Cederman_Gleditsch_Buhaug_2013, perry_2013}. Such insights inform feature engineering, feature selection and model selection \cite[30]{Cederman_Gleditsch_Buhaug_2013}.\par
+One component which also deserves attention is on composed of structural data and theory on the structural prerequisites of intra-state conflict, such as poverty, resources, regime ect. The advantages of such a component is the large catalog of theory following it \citep{Collier_Hoeffler_1998, Fearon_Laitin_2003, Collier_Hoeffler_2004, Hegre_Sambanis_2006, Kalyvas_2007, Goldstone_2010, Cederman_Gleditsch_Buhaug_2013, perry_2013}. Such insights inform feature engineering, feature selection and model selection \cite[30]{Cederman_Gleditsch_Buhaug_2013}.\par
 
 % disadvantage 1 and solution
-However, as noted one disadvantage of this approach is dated data while an other disadvantage is high inertia \citep[10]{chadefaux2017conflict}. Structural features are slow to change while political unrest can evolve into actual intra-state conflict relatively fast. Intriguingly however, given the this inertia we can address the disadvantage of dated data simply by use Gaussian processes to extrapolate the structural patterns into future years. As such, I would exploit the inertia of structural patterns to ameliorate the dated state of the data. To a large extent this effort would mimic the approach presented in this thesis, simply using different data.\par
+As noted, however, one clear disadvantage of this approach is dated data. An other disadvantage is high inertia \citep[10]{chadefaux2017conflict}. Structural features are slow to change while political unrest can evolve into actual intra-state conflict relatively fast. Intriguingly however, given the this inertia we can address the disadvantage of dated data simply by use Gaussian processes to extrapolate the structural patterns into future years. As such, I would exploit the inertia of structural patterns to ameliorate the dated state of the data. To a large extent this effort would mimic the approach presented in this thesis, simply using different data.\par
 
 % disadvantage 2 and solution
-Yet, while the inertia inherent in structural data might justify extrapolating these patterns across five or even ten years, the inertia still means that we might identify fragile regions but not necessarily which of these fragile regions will experience conflict \citep[10]{chadefaux2017conflict}. Combining a structural component with on of patterns will reduces this problem especially if we included other forms of events then actual conflict fatalities.\par 
+Yet, while the inertia inherent in structural data might justify extrapolating these patterns across five or even ten years, the inertia still means that we might identify fragile regions but not necessarily which of these fragile regions will experience conflict \citep[10]{chadefaux2017conflict}. Combining a structural component with one of patterns will reduces this problem especially if we included data on other forms of events such as civil or political unrest.\par 
 
 % Or use test or image recognition..
-Following this logic, an other component should be one which uses text or image data obtained from news/social/political sources. Such data would effectively constitute it own kind of event data, but one specificly tailored for the task at hand. Using text data is still a novel approach in social science \citep{grimmer2013text} and image date even more so [REF fra det papir lene gav dig]. Yet, the use of text data has already shown promise in conflict predictions \citep{chadefaux_2014, mueller_2016}. Using image data to conflict prediction has to my knowledge not been done yet, but it could hold great promise not least since it circumvents the problem of varying languages which challenges text data. \par
+Following this logic, an other component should be one which uses text or image data obtained from news/social/political sources. Such data would effectively constitute it own kind of event data, but one specifically tailored for the task at hand. Using text data is still a novel approach in social science \citep{grimmer2013text} and image date even more so \citep{williams2019images}. Yet, the use of text data has already shown promise in conflict predictions \citep{chadefaux_2014, mueller_2016}. Using image data to conflict prediction has to my knowledge not been done yet, but it could hold great promise not least since it circumvents the problem of varying norms and languages which challenges text data. \par
 
 %advantage - er du sikker på det er sin egen paregraf..
-Text and image data has two advantages on structural data. Firstly, the data has the potential to be very current. In theory, it could be updated in real-time \citep[474]{cederman2017predicting}. Secondly, like other kinds of event data, text and image data would be able to sort fragile but peaceful regions from fragile regions on the verge of conflict. Importantly, such data would also holds an advantage over the event data such as that used in this thesis; it could help predicting onsets far removed in time and space from any previous conflicts.\par
+Text and image data has two advantages on structural data. Firstly, the data has the potential to be very current. In theory, it could be updated in real-time \citep[474]{cederman2017predicting}. Secondly, like more traditional event data, text and image data would be able to sort fragile but peaceful regions from fragile regions on the verge of conflict. Importantly, such data would also holds an advantage over the event data used in this thesis; text and image data could help predict onsets far removed in time and space from any previous conflicts.\par
 
 % Weaknesses
-Naturally, using text or images has its weaknesses. Gathering text or images from the entire globe is no trivial effort. Local sources is hard to come by, and legal barriers might prevent the use of any data obtained. As such, it is not realistic to produce data on a disaggregated level comparable with that of the other components I have suggested. As such, to ameliorate the individual weaknesses of each component they most all be combined into a single unified predictive framework. A unified early warning system for conflict prediction.\par
+Naturally, using text or images also has its weaknesses. Gathering text or images from the entire globe is no trivial effort. Local sources is hard to come by, and legal barriers might prevent the use of any data obtained. As such, it is not realistic to produce data on a disaggregated level comparable with that of the other components which I have presented. As such, to ameliorate the individual weaknesses of each component they most all be combined into a single unified predictive framework. A unified early warning system for conflict prediction.\par
 
 % bridge out ->
 With these paths for future research presented I concluded this thesis on an optimistic note. Reliable conflict prediction might be the conflict research's final frontier, but given the result presented above, it does by no means appear a fruitless nor impossible endeavour.\par
-
-% --------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-% OLD +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-%\section{The Challenge}
-
-%The goal of this master thesis is to add knowledge to the growing field on computational conflict prediction\footnote{Aka. the creations of reliable early-warning-systems}. By conflict I here refer to the following definition from the Uppsala Conflcit Data Program (UCDP):
-
-%\begin{displayquote}
-
-%\emph{"An incident where armed force was used by an organized actor against another organized actor, or against civilians, resulting in at least 1 direct death at a specific location and a specific date."} \citep{Croicu_Sundberg_2017}
-
-%\end{displayquote}
-
-%More specifically the focus of my project in intrastate conflicts. Thus I limit my self to cases where only one of the included "organized actors" is a country. Appropriately I therefore also takes as the unit of analysis sub-national unites; specifically geographical cells of $0.5 \times 0.5$ decimal degrees derived from the PRIO grid database \citep{Tollefsen_2012}, which I shall return to in \autoref{data}.\par 
-
-%As rather novel field, conflict prediction is faced with a plethora of challenges to be tackled before a appropriately reliable early-warning-system can be constructed\footnote{Unless, of course, conflict is inherently shrouded in ontological uncertainty rather than epistemology uncertainty as implied by \cite{Gartzke_1999} in which case the field should be abandoned - luckily results from the last ten years inspire optimism.}. One of these challenges is creating a coherent framework for modeling the temporal/spatial diffusion-pattern of conflict. To clarify, most efforts of conflict predictions are constructed as a econometric or machine-learning problem and include as predictors various features pertaining to all sorts of phenomena. All with various proposed theoretical links to the process of conflict. These phenomena stems from the litterateur on greed, grievances, resource courses and so on. Two closely related dimensions which often also finds themselves included in prediction efforts are the fundamental dimensions of time and space. These dimension have been included both to combat temporal and spatial auto-correlation\footnote{ often using some fixed, random or conditional effects}, but also to capture more complicated phenomena such as \emph{conflict traps} and \emph{conflict diffusion}. Specifically regrading conflict traps and inertia \cite{Collier_Hoeffler_2004} uses a linear decay function counting years since last conflict; \cite{Hegre_Sambanis_2006} uses a linear decay function counting years since last peace; \cite{Cederman_Gleditsch_Buhaug_2013} count the number of previous conflicts; and \cite{perry_2013} propose a "deterioration index" counting the number of fatalities in a given year and diving with the number of years since said given year. Meanwhile, cross-country dispersion has been modeled by \cite{Goldstone_2010}.\par% mere med diffusion!
-
-%These efforts have contributed with important insight, but while they have included features aimed to capture the temporal/spatial pattern of conflict this have not been their prime focus. The consequence is that the features meant to capture these dimensions often appears ad hoc and both methodologically and theoretically underdeveloped. This is further exemplified by the fact no consensus regarding how these dimensions should be modeled have emerged. This is where the present thesis aims to contribute.\par
-
-%This thesis concerns itself only with modeling conflict as a function of conflict in it self. Where conflict have been before and where conflict is now. Crucially the goal is to create a unified methodologically and theoretical coherent framework for the creation of features pertaining to the diffusion of conflicts in time and space based on modern computational methods. To add some much needed context to this rather lofty goal, let my exemplify the challenge at hand by referencing the deterioration index proposed by \cite{perry_2013}. Perry's idea is somewhat connected to the phenomenon of a conflict trap and the notion of some inertia in conflict induced grievances: people want revenge, but the lust for revenge might deteriorate over time. The time deteriorating index would be created by including the number of fatalities in some geographic unit for each of the last ten years as features. The idea is then to down-weigh these fatalities by dividing with the number of years past since the corresponding events. Thus, a feature pertaining to fatalities two years ago will have, as its values, half of the fatalities observed that year \cite[14]{perry_2013}. While the heart is at the right place, it is an ad hoc and underdeveloped solution. There is no reason to cap the effort at ten years and there is no theoretical or practical reason to choose the suggested deterioration rate. Instead of dividing with years past it might be more appropriate to multiply by 0.8 or 0.2; or the deterioration rate might have an altogether different functional form, like an exponential or linear decay function as proposed by \cite{Collier_Hoeffler_2004} or \cite{Hegre_Sambanis_2006} - in which case we still need to decide (read guess) some appropriate deterioration rate. And how are we to translate this index if we change time unite to months or weeks? The crucial point is that we do not know the function(s) and therefore we should estimate the function(s). Also, estimation at least gives us some indication of how bad our "guess" is.\par 
-
-%The exact same problem is present in the context of spatial diffusion. \cite{Goldstone_2010} finds that sharing border with four or more conflict ridden countries increases a given countries risk of civil war and democratic breakdown significantly \cite[195]{Goldstone_2010}. Surely there must be differences in regards to the size of the bordering countries, the severity of the conflict and where in the neighbouring countries the conflicts occur. Further more time and space most interact in some way or another. Meaning that persisting conflict could be more likely to spread or, as argued by \cite{bara_2017}, the termination of conflict in one place might to push weapons and combatants to a neighbouring regions \cite[2003-2006]{bara_2017}. Again the point i clear: modeling features to capture these phenomena is an should be an estimation effort in it self.\par 
-
-%The tools I propose to use for this estimation effort are presented in the next section, while the corresponding data is presented in \autoref{data}.\par
-
-%\section{The Methods}
-
-%There are a number of steps involved in this project, but the two most crucial are feature engineering and evaluation through out-of-sample prediction. Importantly the feature engineering part is here also a estimation effort and will be the prime focus of the project. The preceding prediction effort will serve simply to evaluate the potential of the feature space created; a feature space only pertaining to the temporal/spatial dimension of conflict. I will present each in their own subsection below.\par
-
-%\subsection{Creating the Temporal/Spatial Feature Space}
-
-%The machine learning technique of \emph{Gaussian processes regression} have been used to model both temporal and spatial dependency in Bayesian multilevel models with good results before \citep[411-419]{Mcelreath_2018}. To illustrate via a very simplified and non-technical example: most political scientist are familiar with fixed, random or varying effects models which can facilitate more or less individual intercepts and slopes for each observation according to a categorical scheme such as \emph{country}, \emph{decade}. Including Gaussian processes allows intercepts and slopes for each observation according to a continuous scheme, such as distances like \emph{miles} or \emph{years}. Intriguingly combining these approaches allow the rate of conflict diffusion to differ across countries and regions\footnote{Or indeed any other geographical unit} \citep{gelfand2003spatial, gelfand2012hierarchical, gelfand2016spatial}. The visual toy-example in \autoref{gp_eks} will serve to illustrate the approach further.
-
-%\begin{figure}[!htb]
-%	\centering
-%	\includegraphics[scale=0.7]{GP_eks.pdf}
-%    \caption{\footnotesize{Gaussian process regression regarding the development in conflict fatalities over time in some given geographical unit.}}\label{gp_eks}
-%\end{figure}
-
-%\autoref{gp_eks} illustrates a simple example. Imagine some some given geographical unit - like a PRIO gird cell. We are give yearly fatalities corresponding to the years from 2013 to 2018. You are tasked with estimating the number of fatalities in 2019. This is exactly what the Gaussian process regression above does. Its best estimate is 0 fatalities as it recognized the negative trend. However it "remembers" from past experience that the cell do have conflict potential; this is seen in high uncertainty reflected through the confidence interval pertaining to 2019. As such \autoref{gp_eks} illustrates not just the approaches capabilities in regards to modeling patterns of diffusion, but also it ability to estimate uncertainty and the fact that it is geared towards forecasting challenges. That is, we could just as well have asked for the estimated fatalities count in 2020 or 2021. These estimates will no doubt be clouded in uncertainty, but it is an estimated uncertainty representing our current knowledge of the cell.\par
-
-%Naturally the x-axis could readily be replaced the coordinates for longitude or latitude\footnote{Or other appropriate spatial unites} and temporal dispersion would be neatly modelled. Creating a 3 dimensional space of years, latitude and longitude would yield a geographical map for each included year where information regarding the pattern of conflict would be shared between all three dimensions. Whether the final feature space should be represented as one, three or more features is an empirical question I have yet to answer. Never-the-less, the fact that both the temporal and spatial patterns have potential of being modelled according to a unified approach is both practical and encouraging.\par\par
-
-%As mentioned, however, these predictions are to be features not final predictions. A smaller doll in a babushka doll of predictions if you will. The actual prediction framework in which the features will be tested is briefly present in the next section.\par
-
-%\subsection{Evaluating the Feature Space Through Prediction}
-
-%One of the greater challenges pertaining to conflict prediction is the imbalance of the data; most of the time, most grid cells do not experience any conflict fatalities. The data as such is greatly imbalanced. To handle this challenge I use a suitable estimation procedure, I under-sample the non-events and I utilize the appropriate evaluation metrics. These framework is a bit comprehensive, so I will only be presenting the bare bone intuition below.\par
-
-%\subsubsection{Extreme Gradient Boosting}
-
-%I utilize the Extreme Gradient Boosting (xgboost) algorithm as the basis of my predictions \citep{Chen_2016}\footnote{Implemented through python}. This method is a bit advanced and I shall refrain from digging into the technicalities of the algorithm. However, some fundamentals serve to explain why this framework is especially well suited for the problem at hand. Three characteristics needs presenting; it is a boosting algorithm, it is consisting of regression trees and it is self-regularizing (or self-pruning).
-
-%Boosting involves using a lot of weak classifiers to create a strong classifier. Imagine that we begin with one classifier with which we try to classify geographic locations which will experience conflict fatalities next year. The classifier does rather poorly, not least due to the fact that the events are few and and hard to classify. Thus, we decide to run a new classifier, but now we give less weight to the observations which was correctly predicted and more weight to the observations which was incorrectly predicted. We reiterate this procedure until some measurement criteria is met. Then, all our classifiers are weighted according to their performance and used as a weighted ensemble to predict which geographic locations will experience conflict fatalities of the following year \citep[338-339]{Friedman_2001}. Since the procedure ensures continuing focus on "hard to classify" observations, it is a particularly fruitfully approach when dealing with imbalanced data.\par
-
-%The Next question is naturally which classifiers to build our boosting framework on. Xgboost utilizes regression tree. These closely resembles decision tress where the features are used to split the observations into categories according to which splits yields the most information according to some predefined criteria. Thus, the first split would here be the split which best sorted conflict events from non-events and so on. But unlike decision trees, each regression tree holds a continuous score on each of the leafs, which can be converted into probabilities rather then binary classifications \citep[2]{Chen_2016}. To put it simply, xgboost utilizes N number of regression tress and iteratively uses the predictions of one tree to update the weights of the next tree, such that 'harder to classify' observations are given continuously more and more attention.\par
-
-%The last question here is then how to decide to number of times we shall allow a given tree to split. Too few times and the tree fails to learn any pattern of the data and we underfit. To many splits and the tree starts to learn idiosyncratic artifacts of the training data and we overfit. The xgboost algorithm handles this by penalizing complicated tress. Thus, when the algorithm evaluates whether or not to make a split, the information gain obtained by the potential split is down-weighted according to the increased complexity induced by new splits \cite[4-7]{Chen_2016}. Thus, the algorithm searches for any patterns which might help the prediction effort, but stops before such pattern becomes overly complicated.\par 
-
-%Naturally there is more to the xgboost algorithm than presented here, not least the fact that it has been optimized for sparse data in a number of more technical ways making it even more suited for large and imbalanced data-set then other boosting algorithms \cite[5]{Chen_2016}. Furthermore, the algorithm has a plethora of hyper parameters which will be tuned and optimized to further enhance performance and reduce overfitting\footnote{Usually optimized using k-fold cross validation \citep[241-249]{Friedman_2001}}.\par 
-
-%\subsubsection{Undersampling}
-
-%While the boosting approach presented above is able to handle imbalanced problems, we can help it along by re-sampling our training data to create a more balanced ratio between events and non-events. This is called undersampling \citep[1266-1267]{He_2008}. The specific procedure employed here is called \emph{case-cohort sampling}. I utilizes all available events from the trainingset along a random subset of no-events from the trainingset in order to construct the classifiers used \citep[142]{King_Zeng_2001}. The actual probabilities estimates are, however, inflated since the model thinks that conflicts are less rare than is the actually the case; this is corrected using Bayesian prior correction closely related to what is presented in \cite{King_Zeng_2001}, \cite{king_zeng_2001b} and \cite{Goldstone_2010}.\par
-
-%While most of the information in the data is stored in the events and not the non-events \cite[139]{King_Zeng_2001}, some information is still lost by not using all non-events. The chosen solution is a variant of \emph{informed undersampling}. To counter the inefficient use of information, one can use an ensemble of classifiers all utilizing a new independent subset of non-events to combine with the subset of all available events \cite[1267]{He_2008}. This approach not only utilizes all information available, but also facilities the estimation of the uncertainty inherent in the prediction effort.\par
-
-%Some initials have shown that such a framework do even better if the incoming test data is balanced in accordance with the training data used to create to models. Naturally, such a test is only possible because I do a test-set for evaluation purposes; which of course does not match any practical real world forecasting scenario. However, one could take some precautions. We could weed out all countries or cells which have never experienced any conflicts in our data sample and which are also relatively far from any ongoing conflicts. This would reduce the number of non-events substantially, thus making the incoming data less imbalanced.\par
-
-%An other similar solution would be a "zero-inflated" framework with two or more rounds of estimations. The first round would correspond with the present endeavour. The second round would only include cells with a predicted probability over some appropriately low minimum threshold of conflict risk e.g. 1\%. This is more computational burdensome than simply sorting by country, but it is also more systematical and potential more powerful.\par 
-
-%\subsubsection{Evaluation}
-
-%I will again refrain from digging into this matter in full. The small snippet below will sufice for now.\par 
-
-%Many metrics are available, but the most commonly known are probably "Accuracy", "Receiver Operating Characteristic" curve and the related measure "Area Under the Curve" (AUC) scores. While accuracy is intuitively meaningful and the ROC/AUC score has been coined as a "gold-standard" \citep[366]{perry_2013}, these measures also have some inherent limitations in regards to the specific problem at hand. Accuracy is not very suited for imbalanced data \citep[1264]{He_2008}. The ROC/AUC score tend to judge performance on highly imbalanced data too favorable \citep[1278]{He_2008}. I instead utilizes the metrics "Recall" and "Precision" along two closely related ratio metrics; the "Precision-Recall Curve" and the "Average Precision Rate". These measures are suitable for imbalanced data; have a substantial and conveyable interpretation; judges the present framework appropriately honest and harshly; and with the ratio metrics we circumvent the problem of a hard threshold \cite[1278]{He_2008}.  \par
-
-
-%\section{The Data}\label{data}
-
-%Below I briefly present the data utilized for the project at hand.
-
-
-%\subsection{UCDP}
-
-%Most central to the endeavour at hand is the data regarding intra-state conflict itself. This data is obtained through the Uppsala Conflict Data Program (UCDP) \citep{Sundberg_2013, Croicu_Sundberg_2017}. Specifically I utilize the UCDP Georeferenced Event Dataset (GED) Global version 18.1 \citep{UCDP_2017}. The dataset contains records of conflict fatalities and the corresponding coordinates and dates. I utilized data from 1989 through 2017 or 2018 if it becomes available doing the spring\footnote{For a smaller less detailed feature space data is available going back through 1975}. 
-
-%as mentioned the project at hand limits itself to intra-state conflict, thus I only included incidents which do \emph{not} include two different nations as the organized actors. This data source provides both the prediction target and all information most information for feature engineering. I plan to estimate both probability of conflict and fatalities count on yearly basis.
-
-%\subsection{PRIO}
-
-%The PRIO grid is a global grid divided the world - excluding Greenland and Antarctica - into grid cells of $0.5 \times 0.5$ decimal degrees. It is constructed as geo-spatial (vector) data and primed for collaboration with the UCDP data. As such merging and handling these two data source is a trivial task. Again, to foster an intuitive understanding of the matter at hand is illustrated in \autoref{log_conflicts_2007}.
-
-%\begin{figure}[!htb]
-%	\centering
-%	\includegraphics[scale=0.5]{log_conflicts_2007.pdf}
- %   \caption{\footnotesize{Conflict fatalities (logged) from 2007 according to UCDP %aggregated at the level of PRIO grid cells. Afghanistan, Iraq, Turkmenistan, Georgia and %Zimbabwe are missing this year due to the coding rules of UCDP.}}\label{log_conflicts_2007}
-%\end{figure}
-
-%Here we see the conflict all conflict fatalities classified by UCDP in 2007 aggregated from coordinates to PRIO grid cell level. Notably, while it may appear to be raster data each squared cell is indeed a vector with all what that entails regarding geospatial operations.
-
-%\section{Last Remark}
-
-%Thanks for reading. While it is a bit hastily compiled I do hope the above makse some sense and I look forward to your feedback.\\
-%Best regards\\
-%Simon
 
 
 \pagebreak
@@ -1359,27 +1230,38 @@ With these paths for future research presented I concluded this thesis on an opt
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{Hyper-priors(cm).pdf}
-    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of conflict magnitude. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}\label{roc_curves}
+    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of conflict magnitude. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}
 \end{figure}
+\pagebreak
 
 \subsection{Priors - Static conflict exposure}\label{scePrior}
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{Hyper-priors(sce).pdf}
-    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of static conflict exposure. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}\label{roc_curves}
+    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of static conflict exposure. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}
 \end{figure}
+\pagebreak
 
 \subsection{Priors - Dynamic conflict exposure}\label{dcePrior}
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.47]{Hyper-priors(dce).pdf}
-    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of dynamic conflict exposure. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}\label{roc_curves}
+    \caption{\footnotesize{Weakly informative hyper-priors for the Guassian processes estimation of dynamic conflict exposure. Simply set to help the computation by discouraging high unrealistic values for $\eta$, $\ell$ and $\sigma$.}}
 \end{figure}
+\pagebreak
 
 %\subsection{Visual illustration of Gaussian distribution and Gaussian process}\label{GDGP}
+\subsection{Feature importance 2015}\label{feature_imp2015}
 
+
+\begin{figure}[!htb]
+ 	\centering
+	\includegraphics[scale=0.47]{feature_imp_2015.pdf}
+  \caption{\footnotesize{stuff..}}
+\end{figure}
+\pagebreak
 
 
 \end{document}
