@@ -81,37 +81,45 @@ Civil wars, and internal conflicts in general, have plagued mankind throughout t
 
 \textbf{This thesis represents a substantial step towards the construction of a reliable computational framework for predicting future conflicts at a sub-national level; a so called \emph{early-warning system}.} In the short run such a system will provide international actors valuable information and time to act; mitigating the fallout of conflicts \citep{Ward_Greenhill_Bakke_2010, perry_2013}. In the long run such a system will generate theoretical insights into the mechanics of conflicts, potentially enabling actors to address the underlying courses \citep{Schrodt_2014, chadefaux2017conflict}. Given these potentials, efforts to create an early-warning system have been called "conflict researchers’ ultimate frontier" \citep[474]{cederman2017predicting}. As such, the contribution of this thesis is highly topical and can provide practical and ongoing guidance in future conflict prevention, intervention, and peace keeping efforts.\par
 
-A complete early-warning-system would be constituted by a legion of sophisticated components. In this thesis I will focus on one of these components: A component capable of using past patterns of conflict to predict future patterns of conflict. The reason why I choose this focus, as I will demonstrate throughout this thesis, is that this approach has a number of very appealing properties: it has a clear theoretical foundation, it holds high prediction power, and it takes advantage of very current data. As such, using past patterns to predict future patterns has the potential of being one of the most important and central components of any complete early-warning system. This makes this approach a relevant and worthwhile subject for the thesis at hand.\par
+A complete early-warning-system would be constituted by a legion of sophisticated components. In this thesis I will focus on one of these components: A component capable of using past patterns of conflict to predict future patterns of conflict. The reason why I choose this focus is, as I will demonstrate throughout this thesis, that this approach has a number of very appealing properties: it has a clear theoretical foundation, it holds high prediction power, and it takes advantage of very current data. As such, using past patterns to predict future patterns has the potential of being one of the most important and central components of any complete early-warning system.\par
 
-Specifically [...]
-\todo[inline]{The steps and prime conclusions of this thesis will be briefly outlined here.}
+% what do you find
+Indeed, in this paper I show that using the machine learning technique of Gaussian process to capture and extrapolate past conflict patterns into future years carries great predictive potential. Specifically, while direct comparison is difficult, I am able to generate predictions which are at least as good, if not better, then any previous efforts of conflict prediction using this approach. Importantly I do this using solely the patterns of past conflict, a highly disaggregated unit of analysis and achieved in a setting which rigorously emulates a real world forecasting scenario. The later point is crucial since many researches have previously ignore different aspect of real world forecasting - such as the release date of the data they use relative to the actual years we try to forecast into.\par
 
-The proceeding subsections outline some prime insights, conclusions and challenges regarding conflict forecasting in general. This concurrently qualifies and explains why I focus on the past patterns as opposed to e.g. the structural prerequisites.\par
+% conclusion
+I conclude that the the construction of an early warning system is possible and that the inclusion of past conflict patterns -- correctly handled -- should play a key part of such system. However, I also concluded that we most incorporate data for other sources to create a system reliable enough to use for real world applications.\par 
+
+%bridge
+The proceeding subsections present relevant insights and challenges from the broader field of conflict studies and conflict prediction. This introduction will serve as a primer, putting my specific approach into the context of previous efforts.\par
+
 
 \subsection{Conflict prediction so far}
 % condensat af lit review
 %\todo[inline]{The science}
 
 % what
-The study of internal conflicts has a long and rich history. The sub-field of computational conflict prediction\footnote{from here just denoted conflict prediction}, however, is a rather novel offspring. Researchers of conflict prediction use modern computational tools in efforts to predict the time and place of future conflicts \citep{cederman2017predicting, chadefaux2017conflict}. Some of the earliest examples in academia of such a focus being \cite{Goldstone_2010}, \cite{Hegre2013} and \cite{perry_2013}.\par
+Specifically three developments are relevant for this paper. A shift from estimation towards prediciton, the use of sub-country disaggregated data as opposed the country level data, and the use of event data over structural data as the basis of conflict prediction.\par
+
+% Prediction
+Firstly, the study of internal conflicts has a long and rich history. The sub-field of computational conflict prediction\footnote{from here just denoted conflict prediction}, however, is a rather novel offspring. Researchers of conflict prediction use modern computational tools in efforts to predict the time and place of future conflicts \citep{cederman2017predicting, chadefaux2017conflict}. Some of the earliest examples in academia of such a focus being \cite{Goldstone_2010}, \cite{Hegre2013} and \cite{perry_2013}.\par
 
 % why not before
-There are two main reasons why the field of conflict prediction -- despite its obvious usefulness -- has not flourished yet. First of all; the required technology is relatively new. Indeed, some of the more impressive recent results are due to novel developments in quantitative methods, computation power and data availability \citep{ol2010afghanistan, perry_2013}. Secondly, traditional conflict research has focused on causes, correlates and prerequisites of conflict rather than generating actual predictions \citep[8]{chadefaux2017conflict}. As such, modern predictive efforts are still regarded with high skepticism and papers devoted to prediction have been accused of lacking adequate theoretical grounding \citep[8-9]{chadefaux2017conflict}. 
+There are two main reasons why the field of conflict prediction -- despite its obvious usefulness -- has received more attention. First of all; the required technology is relatively new. Indeed, some of the more impressive results are due to very recent developments in quantitative methods, computation power and data availability \citep{ol2010afghanistan, perry_2013}. Secondly, traditional conflict research has focused on causes, correlates and prerequisites of conflict rather than generating actual predictions \citep[8]{chadefaux2017conflict}. As such, modern predictive efforts are still regarded with high skepticism and papers devoted to prediction have been accused of lacking adequate theoretical grounding \citep[8-9]{chadefaux2017conflict}. 
 
 % why it should be now.
-In reality, however, both prediction and explanation are important components of scientific inquiry, and both are needed to generate and test theories \citep{Schrodt_2014, chadefaux2017conflict}. Indeed, in the natural sciences, accurate predictions are central for the validation of theory \citep[289]{Schrodt_2014}. As such, the restraint against predictions in the field of conflict research has been increasingly criticized \citep{King_Zeng_2001, Ward_Greenhill_Bakke_2010, Goldstone_2010, Schrodt_2014, chadefaux2017conflict}. What is more; creating models with actual prediction-power will also provide heuristic tools and powerful policy-guides for real-world application \citep[372]{Ward_Greenhill_Bakke_2010}.\par
+In reality, however, both prediction and explanation are important components of scientific inquiry, and both are needed to generate and test theories \citep{Schrodt_2014, chadefaux2017conflict}. Indeed, in the natural sciences, accurate predictions are central for the validation of theory \citep[289]{Schrodt_2014}. As such, the restraint against predictions in the field of conflict research has been increasingly criticized \citep{King_Zeng_2001, Ward_Greenhill_Bakke_2010, Goldstone_2010, Schrodt_2014, chadefaux2017conflict}. Furthermore, creating models with actual prediction-power will also provide heuristic tools and powerful policy-guides for real-world application \citep[372]{Ward_Greenhill_Bakke_2010}. As such, a focus on prediciton have been increasingly encourages \citep{Ward_Greenhill_Bakke_2010, Schrodt_2014}.\par
 
 % A number of other recent developments
-Beyond the shift from estimation to predictions, two other recent developments, in the field of conflict studies and conflict predictions, are central to this thesis and requires introduction at this point.\par
+%Beyond this shift from pure estimation to more predictive efforts, two other recent developments, in the field of conflict studies and conflict predictions, are also central to this thesis.\par
 
 % another recent development: disaggregation.
-Firstly, the shift from countries to more disaggregated geographical units of analysis. Countries have traditionally been the main focus, but since the phenomenon of interest is a sub-country phenomenon, the unit of analysis should also be disaggregated at sub-national level \citep[490]{Cederman_Gleditsch_2009}. Employing a disaggregated unit of analysis allows me to create a more detailed analysis of conflict patterns. It also allows me to better analyze incidents where administrative boarders provide little to no ward against conflict diffusion \citep[445-446]{ol2010afghanistan}. In turn, the derived insights allow me to generate forecastings pertaining to specific sub-national areas rather than entire countries.\par
+Secondly, turning to the shift from countries to more disaggregated geographical units of analysis. Countries have traditionally been the main focus, but since the phenomenon of interest is a sub-country phenomenon, the unit of analysis should also be disaggregated at sub-national level \citep[490]{Cederman_Gleditsch_2009}. Employing a disaggregated unit of analysis allows me to create a more detailed analysis of conflict patterns. It also allows me to better analyze incidents where administrative boarders provide little to no ward against conflict diffusion \citep[445-446]{ol2010afghanistan}. In turn, the derived insights allow me to generate forecastings pertaining to specific sub-national areas rather than entire countries.\par
 
 % the last recent development: Structures to patterns.
-The last recent development, which I will touch upon here, constitutes the starting point of this thesis. This development concerns the turn from structural data to event data. Structural data being data pertaining to poverty, deprivation, resources, political regimes etc. Event data being data pertaining to the patterns of past conflicts.\par 
+%The last recent development, which I will touch upon here, constitutes the starting point of this thesis. This development concerns the turn from structural data to event data. Structural data being data pertaining to poverty, deprivation, resources, political regimes etc. Event data being data pertaining to the patterns of past conflicts.\par 
 
-% why event data is better 1
-Traditional efforts have tended to use structural features as foundation. This has been true for both estimations and predictions \cite[10]{chadefaux2017conflict}. However, in a recent contribution of my own I show that patterns of conflict events in themselves appear to hold much more prediction power than the traditional structural variables \citep{Maase}. These findings align perfectly well with a growing strain of the literature concerning conflict diffusion. Little doubt remains that conflicts cluster in time and space \citep[15]{crost2015conflict}. Furthermore, recent efforts have shown that the clustering and diffusion of conflict is often a direct product of contagion \citep{buhaug2008contagion,schutte2011diffusion,crost2015conflict,bara_2017}. As such, when it comes to sheer prediction power, event data appears to have the advantage over structural data.\par
+% Event data
+Thirdly, the last recent development, which I will touch upon here, constitutes the starting point of this thesis. This development concerns the turn from structural data to event data. Traditional efforts have tended to use structural features as foundation. This has been true for both estimations and predictions \cite[10]{chadefaux2017conflict}. However, in a recent contribution of my own I show that patterns of conflict events in themselves appear to hold much more prediction power than the traditional structural variables \citep{Maase}. These findings align perfectly well with a growing strain of the literature concerning conflict diffusion. Little doubt remains that conflicts cluster in time and space \citep[15]{crost2015conflict}. Furthermore, recent efforts have shown that the clustering and diffusion of conflict is often a direct product of contagion \citep{buhaug2008contagion,schutte2011diffusion,crost2015conflict,bara_2017}. As such, when it comes to sheer prediction power, event data appears to have the advantage over structural data.\par
 
 % why evetn data is better 2
 Importantly, event data is also, at present, much more current and more often maintained than the data pertaining to the structural features. In practice this means that the data I use for actual forecasting is much closer in time to the forecastings I wish to generate, thus creating more reliable predictions and mitigating uncertainty. This constitutes a further substantial advantage of event data over structural data.\par
@@ -125,17 +133,26 @@ The next section will introduce the research question I answer, the approach I u
 %the concrete contribution of this thesis which is a framework for constructing reliable conflict forecastings using the temporal and spatial patterns of past conflicts. As such the section will also outline the research question and the steps taken to answer this quesition.\par
 
 \subsection{This framework}
-\todo[inline]{this paper}
+% \todo[inline]{this paper}
 
 % what you gonna do there champ?
-The prerequisite for using past patterns of conflicts to predict future patterns of conflict is the ability to identify and extract salient patterns and further extrapolate these patterns into future years. In this thesis, I show how this can be done using the machine learning technique of \emph{Gaussian processes}. Furthermore, I demonstrate how the technical properties of Gaussian processes align remarkable well with the theoretical foundation of conflict diffusion in general. The presentation, qualification, and exemplification of how Gaussian processes can turn past conflict patterns into future conflict predictions is the prime objective of this thesis.\par
+The prerequisite for using past patterns of conflicts to predict future patterns of conflict is the ability to identify and extract salient patterns and further extrapolate these patterns into future years. In this thesis, I show how this can be done using the machine learning technique of \emph{Gaussian processes}. I will also demonstrate how the technical properties of Gaussian processes align remarkable well with the theoretical foundation of conflict diffusion in general.  The presentation, qualification, and exemplification of how Gaussian processes can turn past conflict patterns into future conflict predictions is the prime objective of this thesis.\par
 
 % RQ
 The research question motivating this thesis can be summed up accordingly:\par
 
+% \begin{displayquote}
+
+% \emph{\textbf{Research Question:} How can we most efficiently use the temporal and geo-spatial patterns of past conflicts to forecast and predict the time and place of future conflicts?}\par
+
+% \end{displayquote}
+
+
+% [Alt1]
+
 \begin{displayquote}
 
-\emph{\textbf{Research Question:} How can we efficiently use the temporal and geo-spatial patterns of past conflicts to forecast and predict the time and place of future conflicts?}\par
+\emph{\textbf{Research Question:} To what extent is it possible to reliably forecast and predict the time and place of future conflicts, using solely the temporal and geo-spatial patterns of past conflicts in tandem with Gaussian processes.}\par
 
 \end{displayquote}
 
