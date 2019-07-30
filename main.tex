@@ -53,7 +53,7 @@
 
 	\begin{titlepage}
 		\maketitle
-		Character count: XXXXXXXX/120.000 (50 normal pages)\\
+		Character count: 117.636/120.000 (50 normal pages)\\
 		\noindent\rule{\linewidth}{0.4pt}
 		\begin{figure}[h]
 			\centering
@@ -65,7 +65,52 @@
 \pagebreak
 
 \begin{abstract}
-\todo[inline]{to come. Max one page}
+%\todo[inline]{to come. Max one page: 2400 char.}
+
+%What was your starting point
+%Previous research has shown that past conflict patterns hold a lot of potential when it comes to predicting future conflicts. Therefore, if we are to create an early warning system for conflict forecasting, such system should include a component focused on extracting prediction power from past temporal and spatial patterns of conflict. However, previous efforts -- estimations and predictions alike -- have to a large extent failed to create features mirroring the theoretical insights we have regarding conflict patterns. To best utilize the predictive potential of past conflict patterns we need a tool that can capture conflict patterns in a manner which complies with the general theoretical expectations of conflict patterns. In this thesis I illustrate that the machine learning technique of Gaussian processes can be such a tool. Specifically my goal was to assess the extent to which it is possible to use Gaussian processes in tandem with past spatial and temporal conflict patterns to predict the time and place of future conflicts.\par
+
+%\emph{\textbf{Research Question:(NEW)} To what extent is it possible to reliably forecast and predict the time and place of future conflicts, using solely the temporal and geo-spatial patterns of past conflicts in tandem with Gaussian processes.}\par
+
+%what is going on:
+This thesis represents a substantial step towards the construction of a reliable computational early-warning system for predicting future intra-state conflicts at a sub-national level. Specifically I examine to what extent it is possible to reliably forecast and predict the time and place of future conflicts, using the temporal and geo-spatial patterns of past conflicts in tandem with Gaussian processes.\par
+
+% the problem
+Previous research has shown that past conflict patterns hold potential when it comes to predicting future conflicts. However, previous efforts have largely failed to create features mirroring the theoretical insights we have regarding conflict patterns. To best take advantage of the predictive potential inherent in past conflict patterns we need a tool that can capture conflict patterns in a manner which complies with theoretical expectations. In this thesis I illustrate that the machine learning technique of Gaussian processes is such a tool.\par
+
+% Test and train
+I use highly disaggregated spatial data from the years 1989 through 2012 to train my framework while data pertaining to the years 2013 through 2017 are held back as a test set to emulate the unknown feature which I can test my predictions against. 
+
+% how do you do it
+Using Gaussian processes I capture the spatial and temporal patterns of past conflicts and extrapolate these into "future" test years. To asses the extent to which my approach has succeeded in generating reliable forecasts, I use a predictive framework based on xgboost to convert the patterns in to probabilities which are evaluated through out-of-sample prediction.\par
+
+% results
+Using my approach to forecast respectively two and three years into the "future" I achieved AP scores of 0.51 (2014) and 0.52 (2015) against a baseline of roughly 0.05. For both these years I achieved an AUC score of 0.91 against a baseline of 0.50.\par 
+
+% compared
+While direct comparison with previous efforts is difficult, the framework presented here does at least as well, if not better, than the state of the art. Notably this is done using only past patterns, and in a setting which emulates a real world scenario. 
+
+% one disadvantage 
+One disadvantage of the approach is that it is unable to capture truly novel conflict onsets far removed in time and space from any previous conflict. Amending this will require the inclusion of other data sources.\par
+
+% What did you find?
+%To asses the extent to which my approach had succeeded in generating reliable forecasts, I used a predictive framework based on xgboost and undersampling along with out-of-sample prediction to evaluate the predictive potential of the extracted and extrapolated conflict patterns. Using my approach to forecast respectively two and three years into the future I achieved AP scores of 0.51 (2014) and 0.52 (2015) against a baseline of roughly 0.05. For both years I achieved an AUC score of 0.91 against a baseline of 0.50. In more substantial terms; if I set a probability threshold at 0.10 I am able to correctly predict half of all conflicts, but doing this will also generate one false positive for each true positive. Naturally I am able to capture more true positives, at the price of relatively more false positive.\par 
+
+% is that good?
+%Given the highly disaggregated unit of analyses, the great imbalance of the data and the subject at hand these are encouragingly results which definitely shows that past conflict patterns do hold a lot of predictive potential -- not least when they are captured in a theoretical and methodological coherent manner.\par 
+
+% compared to efforts?
+%Unfortunately my results are somewhat hard to compare to previous efforts -- not least due the highly disaggregated unit of analysis. The only effort which is directly comparable is \cite{Maase} which my approach here outperforms despite that fact the \cite{Maase} includes both simple measures of conflict patterns and structural features. While comparison with other efforts is less forward it is clear that the framework presented here does at least as well, if not better, than the state of the art. Notably this is done using only past patterns, and in a setting which emulates a real world scenario. The later point contrast to many previous efforts where researches ignores the fact that the data their used would be rather dated by the time it is actually made available.
+
+% the bad
+%That being said it is also clear that I still have work to do before an actual reliable early warning system can be compiled. specifically my approach are unable to identify truly novel conflict onsets far removed from any past conflicts in time and space. That being said this thesis do present a substantial step forward, towards the creation of a actual early-warning-system for conflict forecasting.\par
+
+% what is next/bridge
+%As presented, using the patterns of past conflicts as a predictor only constitute one of several components needed to create a complete early warning system. Naturally, there are no final answers concerning how many or which specific components are needed to create a fully operational early warning system. As such, in the next and final section I will present a number of components which might ammend the weaknesses of the approach presented above.\par
+
+
+
+
 
 \end{abstract}
 \pagebreak
@@ -1125,7 +1170,7 @@ This finalizes my evaluation of the predictive framework I created for these the
 \section{The Conclusion}
 
 %What was your starting point
-Previous research has shown that past conflict patterns hold a lot of potential when it comes to predicting future conflicts. As such, if we are to create an early warning system for conflict forecasting, such system should include a component focused on extracting prediction power from past temporal and spatial patterns of conflict. However, previous efforts -- estimations and predictions alike -- have to a large extent failed to create features mirroring the theoretical insights we have regarding conflict patterns. To best utilize the predictive potential of past conflict patterns we need a tool that can capture conflict patterns in a manner which complies with the general theoretical expectations of conflict patterns. In this thesis I illustrate that the machine learning technique of Gaussian processes can be such a tool. Specifically my goal was to assess the extent to which it is possible to use Gaussian processes in tandem with past spatial and temporal conflict patterns to predict the time and place of future conflicts.\par
+Previous research has shown that past conflict patterns hold a lot of potential when it comes to predicting future conflicts. Therefore, if we are to create an early warning system for conflict forecasting, such system should include a component focused on extracting prediction power from past temporal and spatial patterns of conflict. However, previous efforts -- estimations and predictions alike -- have to a large extent failed to create features mirroring the theoretical insights we have regarding conflict patterns. To best utilize the predictive potential of past conflict patterns we need a tool that can capture conflict patterns in a manner which complies with the general theoretical expectations of conflict patterns. In this thesis I illustrate that the machine learning technique of Gaussian processes can be such a tool. Specifically my goal was to assess the extent to which it is possible to use Gaussian processes in tandem with past spatial and temporal conflict patterns to predict the time and place of future conflicts.\par
 
 %Using an approach based on Gaussian processes I thus show how we can capture the temporal and geo-spatial patterns of past conflicts and use these patterns to forecast and predict the time and place of future conflicts.\par
 
@@ -1136,7 +1181,7 @@ Previous research has shown that past conflict patterns hold a lot of potential 
 To this end I used Gaussian processes to create eight features each pertaining the spatial and temporal patterns of conflicts. Also using Gaussian processes I extrapolated these features into future years and then used these extrapolations to predict the probability of future conflicts in the geographical grid cells used as unit of analysis.\par
 
 % What did you find?
-To asses the extent to which my approach had succeeded in generating reliable forecasts, I used a predictive framework based on xgboost and undersampling along with out-of-sample prediction to evaluate the predictive potential of the extracted and extrapolated conflict patterns. Using my approach to forecast respectivly two and three years into the future I achieved AP scores of 0.51 (2014) and 0.52 (2015) against a baseline of roughly 0.05. For both years I achieved an AUC score of 0.91 against a baseline of 0.50. In more substantial terms; if I set a probability threshold at 0.10 I am able to correctly predict half of all conflicts, but doing this will also generate in one false positive for each true positive. Naturally I am able to capture more true positives, at the price of relatively more false positive.\par 
+To asses the extent to which my approach had succeeded in generating reliable forecasts, I used a predictive framework based on xgboost and undersampling along with out-of-sample prediction to evaluate the predictive potential of the extracted and extrapolated conflict patterns. Using my approach to forecast respectively two and three years into the future I achieved AP scores of 0.51 (2014) and 0.52 (2015) against a baseline of roughly 0.05. For both years I achieved an AUC score of 0.91 against a baseline of 0.50. In more substantial terms; if I set a probability threshold at 0.10 I am able to correctly predict half of all conflicts, but doing this will also generate one false positive for each true positive. Naturally I am able to capture more true positives, at the price of relatively more false positive.\par 
 
 % is that good?
 Given the highly disaggregated unit of analyses, the great imbalance of the data and the subject at hand these are encouragingly results which definitely shows that past conflict patterns do hold a lot of predictive potential -- not least when they are captured in a theoretical and methodological coherent manner.\par 
